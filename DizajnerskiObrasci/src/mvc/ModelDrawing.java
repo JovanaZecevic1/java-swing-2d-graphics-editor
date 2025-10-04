@@ -56,10 +56,11 @@ public class ModelDrawing{
 		
 		
 		//pronaci oblik na koji je kliknuto
-		for(Shape shape:shapes) {
-			if(shape.contains(x, y)) {
+		for(int i=shapes.size()-1; i>=0; i--) {
+			Shape shape = shapes.get(i);
+			if(shape.contains(x, y)){
 				clickedShape = shape;
-				break;
+				break; //uzima poslednji(najvisi po z osi)
 			}
 		}
 		
