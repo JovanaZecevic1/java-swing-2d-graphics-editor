@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import drawing.DrawingPanel;
 import geometry.Shape;
 
 import geometry.Circle;
