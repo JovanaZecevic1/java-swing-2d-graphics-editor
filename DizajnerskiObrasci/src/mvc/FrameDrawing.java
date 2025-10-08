@@ -154,12 +154,5 @@ public class FrameDrawing extends JFrame {
         }
     }
     
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            FrameDrawing frame = new FrameDrawing();
-            frame.setVisible(true);
-        });
-    }
-
 
 }

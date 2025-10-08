@@ -1,9 +1,14 @@
 package mvc;
 
+import java.awt.EventQueue;
+
 public class Application {
 
 	public static void main(String[] args) {
-		System.out.println("Dobrodošli na vežbe iz predmeta Dizajnerski obrasci.");
+		EventQueue.invokeLater(() -> {
+            FrameDrawing frame = new FrameDrawing();
+            frame.setVisible(true);
+        });
 
 	}
 
