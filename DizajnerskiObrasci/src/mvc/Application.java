@@ -10,7 +10,7 @@ public class Application {
                 try {
                     // Create MVC components
                     ModelDrawing model = new ModelDrawing();
-                    FrameDrawing2 frame = new FrameDrawing2(model);
+                    FrameDrawing frame = new FrameDrawing(model);
                     ControllerDrawing controller = new ControllerDrawing(model, frame);
 
                     // Connect them together

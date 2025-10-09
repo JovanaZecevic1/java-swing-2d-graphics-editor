@@ -13,10 +13,10 @@ public class ControllerDrawing {
 
 	private ModelDrawing model;
 	private ViewDrawing view;
-	private FrameDrawing2 frame;
+	private FrameDrawing frame;
 	private Point startPoint;
 	
-	public ControllerDrawing(ModelDrawing model, FrameDrawing2 frame) {
+	public ControllerDrawing(ModelDrawing model, FrameDrawing frame) {
 		this.model = model;
 		this.frame=frame;
 	}

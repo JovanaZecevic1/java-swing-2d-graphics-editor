@@ -11,8 +11,8 @@ import observer.Observer;
 
 public class ModelDrawing implements Observable{
 
-	private List<Shape> shapes;
-	private List<Shape> selectedShapes;
+	private List<Shape> shapes = new ArrayList<Shape>();
+	private List<Shape> selectedShapes = new ArrayList<Shape>(); 
 	private List<Observer> observers = new ArrayList<Observer>();
 	
 	public ModelDrawing() {
@@ -22,15 +22,18 @@ public class ModelDrawing implements Observable{
 	
 	public void add(Shape shape) {
 		shapes.add(shape);
+		notifyObservers();
 	}
 	
 	public void addAt(int index, Shape shape) {
 		shapes.add(index, shape);
+		notifyObservers();
 	}
 	
 	public void remove(Shape shape) {
 		shapes.remove(shape);
 		selectedShapes.remove(shape);
+		notifyObservers();
 	}
 	
 	public List<Shape> getAll(){
@@ -84,6 +87,7 @@ public class ModelDrawing implements Observable{
 			clearSelection();
 			clickedShape.setSelected(true);
 			selectedShapes.add(clickedShape);		}
+		notifyObservers();
 	}
 	
 	public List<Shape> getSelected(){
