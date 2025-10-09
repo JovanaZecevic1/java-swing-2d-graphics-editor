@@ -109,5 +109,18 @@ public class Rectangle extends Shape {
 		}
 		return 0;
 	}
+	
+	@Override
+	public Shape clone() {
+	    Rectangle cloned = new Rectangle(
+	        (Point) this.upperLeftPoint.clone(), 
+	        this.height, 
+	        this.width
+	    );
+	    cloned.setOutlineColor(this.getOutlineColor());
+	    cloned.setInnerColor(this.getInnerColor());
+	    cloned.setSelected(this.isSelected());
+	    return cloned;
+	}
 
 }

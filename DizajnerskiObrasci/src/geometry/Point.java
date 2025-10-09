@@ -145,6 +145,13 @@ public class Point extends Shape {
 		return 0;
 
 	}
+	@Override
+	public Shape clone() {
+	    Point cloned = new Point(this.x, this.y);
+	    cloned.setOutlineColor(this.getOutlineColor());
+	    cloned.setSelected(this.isSelected());
+	    return cloned;
+	}
 
 
 }

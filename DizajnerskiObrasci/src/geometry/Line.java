@@ -99,6 +99,17 @@ public class Line extends Shape{
 		return 0;
 
 	}
+	
+	@Override
+	public Shape clone() {
+	    Line cloned = new Line(
+	        (Point) this.startPoint.clone(), 
+	        (Point) this.endPoint.clone()
+	    );
+	    cloned.setOutlineColor(this.getOutlineColor());
+	    cloned.setSelected(this.isSelected());
+	    return cloned;
+	}
 
 
 }

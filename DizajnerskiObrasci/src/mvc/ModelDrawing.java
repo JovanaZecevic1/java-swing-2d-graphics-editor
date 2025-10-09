@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Iterator;
 
 import geometry.Shape;
+import observer.Observable;
+import observer.Observer;
 
 
-public class ModelDrawing{
+public class ModelDrawing implements Observable{
 
 	private List<Shape> shapes;
 	private List<Shape> selectedShapes;
+	private List<Observer> observers = new ArrayList<Observer>();
 	
 	public ModelDrawing() {
 		this.shapes = new ArrayList<>();
@@ -105,6 +108,28 @@ public class ModelDrawing{
 	public void removeFromSelection(Shape shape) {
 		selectedShapes.remove(shape);
 		shape.setSelected(false);
+	}
+
+	@Override
+	public void addObserver(Observer observer) {
+		observers.add(observer);
+		
+	}
+
+	@Override
+	public void removeObserver(Observer observer) {
+		observers.remove(observer);
+		
+	}
+
+	@Override
+	public void notifyObservers() {
+		Iterator<Observer> it = observers.iterator();
+		while(it.hasNext()) {
+			it.next().update();		
+			
+		}
+		
 	}
 	
 	

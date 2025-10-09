@@ -11,6 +11,8 @@ public abstract class Shape implements Moveable, Comparable{
   	public Shape() {
 		
 	}
+  	
+  	public abstract Shape clone(); 
 	
 	public Shape (boolean selected) {
 		this.selected = selected;

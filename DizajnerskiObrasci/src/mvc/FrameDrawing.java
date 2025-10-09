@@ -27,7 +27,6 @@ public class FrameDrawing extends JFrame {
     private JToggleButton tglBtnDraw;
     private JToggleButton tglBtnSelect;
     
-    private Point startPoint;
     
     public FrameDrawing() {
         // Kreiranje MVC komponenti
@@ -42,7 +41,8 @@ public class FrameDrawing extends JFrame {
         
         // Content pane
         contentPane = new JPanel();
-        contentPane.setBackground(new Color(64, 0, 64));
+        contentPane.setBackground(Color.WHITE);
+
         contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout());
         setContentPane(contentPane);
@@ -53,7 +53,6 @@ public class FrameDrawing extends JFrame {
         
         // Inicijalizacija komponenti
         initToolbars();
-        initCanvas();
     }
     private void initToolbars() {
         // North toolbar - dugmici za oblike
@@ -115,44 +114,9 @@ public class FrameDrawing extends JFrame {
         contentPane.add(toolBarSouth, BorderLayout.SOUTH);
     }
     
-    private void initCanvas() {
-        view.setBackground(Color.WHITE);
-        
-        view.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
-                
-                if (tglBtnDraw.isSelected()) {
-                    handleDrawMode(x, y);
-                } else if (tglBtnSelect.isSelected()) {
-                    controller.selectShape(x, y);
-                }
-            }
-        });
-        
-        contentPane.add(view, BorderLayout.CENTER);
-    }
+   
     
-    private void handleDrawMode(int x, int y) {
-        if (tglBtnPoint.isSelected()) {
-            controller.addPoint(x, y);
-        } else if (tglBtnLine.isSelected()) {
-            if (startPoint == null) {
-                startPoint = new geometry.Point(x, y);
-            } else {
-                controller.addLine(startPoint, x, y);
-                startPoint = null;
-            }
-        } else if (tglBtnCircle.isSelected()) {
-            controller.addCircle(x, y);
-        } else if (tglBtnRect.isSelected()) {
-            controller.addRectangle(x, y);
-        } else if (tglBtnDonut.isSelected()) {
-            controller.addDonut(x, y);
-        }
-    }
+    
     
 
 }

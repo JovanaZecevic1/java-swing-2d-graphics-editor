@@ -100,4 +100,15 @@ public class Circle extends Shape{
 		return 0;
 
 	}
+	@Override
+	public Shape clone() {
+	    Circle cloned = new Circle(
+	        (Point) this.center.clone(), 
+	        this.radius
+	    );
+	    cloned.setOutlineColor(this.getOutlineColor());
+	    cloned.setInnerColor(this.getInnerColor());
+	    cloned.setSelected(this.isSelected());
+	    return cloned;
+	}
 }
