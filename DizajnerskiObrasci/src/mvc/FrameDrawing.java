@@ -257,7 +257,35 @@ public class FrameDrawing extends JFrame implements Observer{
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		   // Provera da li postoje selektovani oblici
+	    boolean hasSelection = model.hasSelected();
+	    int selectedCount = model.getSelectedCount();
+	    int totalShapes = model.getSize();
+	    
+	    // Dugmad koja zavise od selekcije
+	    btnModify.setEnabled(hasSelection);
+	    btnDelete.setEnabled(hasSelection);
+	    
+	    // Dugmad za pomeranje po Z-osi (potrebna je tačno 1 selekcija)
+	    boolean hasSingleSelection = (selectedCount == 1);
+	    btnToFront.setEnabled(hasSingleSelection);
+	    btnToBack.setEnabled(hasSingleSelection);
+	    btnBringToFront.setEnabled(hasSingleSelection);
+	    btnBringToBack.setEnabled(hasSingleSelection);
+	    
+	    // Dugmad za boje (potrebna je bar 1 selekcija)
+	    btnEdgeColor.setEnabled(hasSelection);
+	    btnFillColor.setEnabled(hasSelection);
+	    
+	    // Undo/Redo dugmad (za sada disabled)
+	    // btnUndo.setEnabled(false);
+	    // btnRedo.setEnabled(false);
+	    
+	    // Save dugme - omogući samo ako postoje oblici
+	    btnSave.setEnabled(totalShapes > 0);
+	    
+	    // Open dugme - uvek omogućeno
+	    btnOpen.setEnabled(true);
 		
 	}
 

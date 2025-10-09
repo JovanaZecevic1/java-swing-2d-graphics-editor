@@ -4,9 +4,11 @@ import geometry.*;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.util.Stack;
 
 import javax.swing.JOptionPane;
 
+import command.Command;
 import drawingObjects.*;
 
 public class ControllerDrawing {
@@ -15,6 +17,9 @@ public class ControllerDrawing {
 	private ViewDrawing view;
 	private FrameDrawing frame;
 	private Point startPoint;
+	
+    private Stack<Command> undoStack = new Stack<>();
+    private Stack<Command> redoStack = new Stack<>();
 	
 	public ControllerDrawing(ModelDrawing model, FrameDrawing frame) {
 		this.model = model;
