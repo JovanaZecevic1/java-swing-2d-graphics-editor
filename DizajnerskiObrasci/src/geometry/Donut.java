@@ -2,7 +2,9 @@ package geometry;
 
 import java.awt.Color;
 import java.awt.Graphics;
-
+import java.awt.Graphics2D;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D; 
 /*nasledjivanje omogucava da se postojece klase koriste za kreiranje novih
 nalsedjuju se svi atributi i metode koji nisu deklarisani kao private*/
 public class Donut extends Circle {
@@ -41,7 +43,7 @@ public class Donut extends Circle {
 	}
 	
 	public void draw(Graphics g) {
-		super.draw(g);
+		/*super.draw(g);
 		g.setColor(Color.WHITE);
 		g.fillOval(getCenter().getX() - innerRadius, getCenter().getY() - innerRadius, 2 * innerRadius, 2 *innerRadius);
 		g.setColor(getOutlineColor());
@@ -54,7 +56,56 @@ public class Donut extends Circle {
 			g.drawRect(getCenter().getX() - 2, getCenter().getY() - innerRadius - 2, 4, 4);
 			g.drawRect(getCenter().getX() - 2, getCenter().getY() + innerRadius - 2, 4, 4);
 			g.setColor(Color.black);
-		}
+		}*/
+		
+		Graphics2D g2d = (Graphics2D) g;
+		
+	    // spoljašnji krug
+	    Ellipse2D outerCircle = new Ellipse2D.Double(
+	        getCenter().getX() - getRadius(),
+	        getCenter().getY() - getRadius(),
+	        getRadius() * 2,
+	        getRadius() * 2
+	    );
+	    // unutrašnji krug (rupa)
+	    Ellipse2D innerCircle = new Ellipse2D.Double(
+	        getCenter().getX() - innerRadius,
+	        getCenter().getY() - innerRadius,
+	        innerRadius * 2,
+	        innerRadius * 2
+	    );
+	    
+	    // Area za donut (spoljašnji - unutrašnji)
+	    Area donutArea = new Area(outerCircle);
+	    donutArea.subtract(new Area(innerCircle));
+	    // innerColor (samo prsten)
+	    g2d.setColor(getInnerColor());
+	    g2d.fill(donutArea);
+	    
+
+	    // ivice
+	    g2d.setColor(getOutlineColor());
+	    g2d.draw(outerCircle);   // Spoljna ivica
+	    g2d.draw(innerCircle);   // Unutrašnja ivica
+
+	    if (isSelected()) {
+	        g.setColor(Color.BLUE);
+	        
+	        // Centar
+	        g.drawRect(getCenter().getX() - 2, getCenter().getY() - 2, 4, 4);
+	        
+	        // Levo
+	        g.drawRect(getCenter().getX() - innerRadius - 2, getCenter().getY() - 2, 4, 4);
+	        
+	        // Desno
+	        g.drawRect(getCenter().getX() + innerRadius - 2, getCenter().getY() - 2, 4, 4);
+	        
+	        // Gore
+	        g.drawRect(getCenter().getX() - 2, getCenter().getY() - innerRadius - 2, 4, 4);
+	        
+	        // Dole
+	        g.drawRect(getCenter().getX() - 2, getCenter().getY() + innerRadius - 2, 4, 4);
+	    }
 
 	}
 
