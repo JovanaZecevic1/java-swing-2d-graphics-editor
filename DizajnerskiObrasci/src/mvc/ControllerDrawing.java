@@ -9,8 +9,12 @@ import java.util.Stack;
 import javax.swing.JOptionPane;
 
 import command.Command;
-import command.AddShapeCommand;      
+import command.AddShapeCommand;
+import command.BringToBackCommand;
+import command.BringToFrontCommand;
 import command.RemoveShapeCommand;
+import command.ToBackCommand;
+import command.ToFrontCommand;
 import command.UpdateCircleCommand;
 import command.UpdateDonutCommand;
 import command.UpdateHexagonCommand;
@@ -323,8 +327,8 @@ public class ControllerDrawing {
 	    dlg.getTextFieldX().setText(String.valueOf(hexagon.getX()));
 	    dlg.getTextFieldY().setText(String.valueOf(hexagon.getY()));
 	    dlg.getTextFieldRadius().setText(String.valueOf(hexagon.getR()));
-	    dlg.setOutlineColor(hexagon.getOutlineColor());  // ✅ Shape metoda
-	    dlg.setInnerColor(hexagon.getInnerColor());      // ✅ Shape metoda
+	    dlg.setOutlineColor(hexagon.getOutlineColor()); 
+	    dlg.setInnerColor(hexagon.getInnerColor());      
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
@@ -333,11 +337,40 @@ public class ControllerDrawing {
 	            Integer.parseInt(dlg.getTextFieldY().getText()),
 	            Integer.parseInt(dlg.getTextFieldRadius().getText())
 	        );
-	        newState.setOutlineColor(dlg.getOutlineColor());  // ✅ Shape metoda
-	        newState.setInnerColor(dlg.getInnerColor());      // ✅ Shape metoda
+	        newState.setOutlineColor(dlg.getOutlineColor());  
+	        newState.setInnerColor(dlg.getInnerColor());      
 	        
 	        executeCommand(new UpdateHexagonCommand(model, hexagon, newState));
 	    }
 	}
+	
+	public void toFront() {
+	    if (model.getSelectedCount() == 1) {
+	        Shape shape = model.getSelected().get(0);
+	        executeCommand(new ToFrontCommand(model, shape));
+	    }
+	}
+
+	public void toBack() {
+	    if (model.getSelectedCount() == 1) {
+	        Shape shape = model.getSelected().get(0);
+	        executeCommand(new ToBackCommand(model, shape));
+	    }
+	}
+
+	public void bringToFront() {
+	    if (model.getSelectedCount() == 1) {
+	        Shape shape = model.getSelected().get(0);
+	        executeCommand(new BringToFrontCommand(model, shape));
+	    }
+	}
+
+	public void bringToBack() {
+	    if (model.getSelectedCount() == 1) {
+	        Shape shape = model.getSelected().get(0);
+	        executeCommand(new BringToBackCommand(model, shape));
+	    }
+	}
+
 	
 }

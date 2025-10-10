@@ -180,7 +180,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnToFront = new JButton("To Front");
 		btnToFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.toFront();
 			}
 		});
 		panelWest.add(btnToFront);
@@ -189,6 +189,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnToBack = new JButton("To Back");
 		btnToBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				controller.toBack();
 			}
 		});
 		panelWest.add(btnToBack);
@@ -197,6 +198,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnBringToFront = new JButton("Bring To Front");
 		btnBringToFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				controller.bringToFront();
 			}
 		});
 		panelWest.add(btnBringToFront);
@@ -205,6 +207,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnBringToBack = new JButton("Bring To Back");
 		btnBringToBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				controller.bringToBack();
 			}
 		});
 		panelWest.add(btnBringToBack);
