@@ -12,13 +12,7 @@ public class UpdateCircleCommand implements Command {
     
     public UpdateCircleCommand(Circle circle, Circle newState) {
         this.circle = circle;
-        
-        Point oldCenter = new Point(circle.getCenter().getX(), circle.getCenter().getY());
-        this.oldState = new Circle(oldCenter, circle.getRadius());
-        this.oldState.setOutlineColor(circle.getOutlineColor());
-        this.oldState.setInnerColor(circle.getInnerColor());
-        this.oldState.setSelected(circle.isSelected());
-        
+        this.oldState = circle.clone();
         this.newState = newState;
     }
     

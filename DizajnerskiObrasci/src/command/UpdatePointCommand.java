@@ -10,9 +10,7 @@ public class UpdatePointCommand implements Command {
     
     public UpdatePointCommand(Point point, Point newState) {
         this.point = point;
-        this.oldState = new Point(point.getX(), point.getY());
-        this.oldState.setOutlineColor(point.getOutlineColor());
-        this.oldState.setSelected(point.isSelected());
+        this.oldState = point.clone();
         this.newState = newState;
     }
     

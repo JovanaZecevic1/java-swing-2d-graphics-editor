@@ -107,6 +107,7 @@ public class ModelDrawing implements Observable{
 			shape.setSelected(false);
 		}
 		selectedShapes.clear();
+		notifyObservers();
 	}
 	
 	public void removeFromSelection(Shape shape) {

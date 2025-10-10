@@ -12,16 +12,7 @@ public class UpdateRectangleCommand implements Command {
     
     public UpdateRectangleCommand(Rectangle rectangle, Rectangle newState) {
         this.rectangle = rectangle;
-        
-        Point oldUpperLeft = new Point(rectangle.getUpperLeftPoint().getX(), 
-                                        rectangle.getUpperLeftPoint().getY());
-        this.oldState = new Rectangle(oldUpperLeft, 
-                                       rectangle.getWidth(), 
-                                       rectangle.getHeight());
-        this.oldState.setOutlineColor(rectangle.getOutlineColor());
-        this.oldState.setInnerColor(rectangle.getInnerColor());
-        this.oldState.setSelected(rectangle.isSelected());
-        
+        this.oldState = rectangle.clone();
         this.newState = newState;
     }
     

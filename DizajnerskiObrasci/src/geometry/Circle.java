@@ -101,7 +101,7 @@ public class Circle extends Shape{
 
 	}
 	@Override
-	public Shape clone() {
+	public Circle clone() {
 	    Circle cloned = new Circle(
 	        (Point) this.center.clone(), 
 	        this.radius

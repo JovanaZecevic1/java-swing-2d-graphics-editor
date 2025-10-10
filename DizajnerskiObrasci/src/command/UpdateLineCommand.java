@@ -12,13 +12,7 @@ public class UpdateLineCommand implements Command {
     
     public UpdateLineCommand(Line line, Line newState) {
         this.line = line;
-        
-        Point oldStart = new Point(line.getStartPoint().getX(), line.getStartPoint().getY());
-        Point oldEnd = new Point(line.getEndPoint().getX(), line.getEndPoint().getY());
-        this.oldState = new Line(oldStart, oldEnd);
-        this.oldState.setOutlineColor(line.getOutlineColor());
-        this.oldState.setSelected(line.isSelected());
-        
+        this.oldState = line.clone();
         this.newState = newState;
     }
     

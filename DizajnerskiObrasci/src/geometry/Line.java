@@ -101,7 +101,7 @@ public class Line extends Shape{
 	}
 	
 	@Override
-	public Shape clone() {
+	public Line clone() {
 	    Line cloned = new Line(
 	        (Point) this.startPoint.clone(), 
 	        (Point) this.endPoint.clone()

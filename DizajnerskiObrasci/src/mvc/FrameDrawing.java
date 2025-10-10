@@ -144,6 +144,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				controller.deleteSelected();
 			}
 		});
 		panelWest.add(btnDelete);
@@ -152,6 +153,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnModify = new JButton("Modify");
 		btnModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				controller.modifySelected();
 			}
 		});
 		panelWest.add(btnModify);
@@ -160,6 +162,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnUndo = new JButton("Undo");
 		btnUndo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				controller.undo();
 			}
 		});
 		panelWest.add(btnUndo);
@@ -168,6 +171,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnRedo = new JButton("Redo");
 		btnRedo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				controller.redo();
 			}
 		});
 		panelWest.add(btnRedo);
@@ -176,6 +180,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnToFront = new JButton("To Front");
 		btnToFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 		panelWest.add(btnToFront);
@@ -277,9 +282,8 @@ public class FrameDrawing extends JFrame implements Observer{
 	    btnEdgeColor.setEnabled(hasSelection);
 	    btnFillColor.setEnabled(hasSelection);
 	    
-	    // Undo/Redo dugmad (za sada disabled)
-	    // btnUndo.setEnabled(false);
-	    // btnRedo.setEnabled(false);
+	    btnUndo.setEnabled(controller.canUndo());
+	    btnRedo.setEnabled(controller.canRedo());;
 	    
 	    // Save dugme - omogući samo ako postoje oblici
 	    btnSave.setEnabled(totalShapes > 0);

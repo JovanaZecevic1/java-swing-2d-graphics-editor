@@ -111,7 +111,7 @@ public class Rectangle extends Shape {
 	}
 	
 	@Override
-	public Shape clone() {
+	public Rectangle clone() {
 	    Rectangle cloned = new Rectangle(
 	        (Point) this.upperLeftPoint.clone(), 
 	        this.height, 

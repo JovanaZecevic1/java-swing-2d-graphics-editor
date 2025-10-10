@@ -9,12 +9,19 @@ import java.util.Stack;
 import javax.swing.JOptionPane;
 
 import command.Command;
+import command.AddShapeCommand;      
+import command.RemoveShapeCommand;
+import command.UpdateCircleCommand;
+import command.UpdateDonutCommand;
+import command.UpdateLineCommand;
+import command.UpdatePointCommand;
+import command.UpdateRectangleCommand;
 import drawingObjects.*;
 
 public class ControllerDrawing {
 
 	private ModelDrawing model;
-	private ViewDrawing view;
+	//private ViewDrawing view;
 	private FrameDrawing frame;
 	private Point startPoint;
 	
@@ -25,6 +32,45 @@ public class ControllerDrawing {
 		this.model = model;
 		this.frame=frame;
 	}
+	
+	public boolean canUndo() {
+	    return !undoStack.isEmpty();
+	}
+
+	public boolean canRedo() {
+	    return !redoStack.isEmpty();
+	}
+
+	// Pomoćna metoda
+	private void executeCommand(Command cmd) {
+	    cmd.execute();                   
+	                                      
+	    undoStack.push(cmd);              
+	    redoStack.clear();  
+	    model.notifyObservers();
+	}
+
+	public void undo() {
+	    if (canUndo()) {
+	        Command cmd = undoStack.pop();
+	        cmd.unexecute();              
+	        redoStack.push(cmd);
+	    }
+	    model.notifyObservers();
+	}
+
+	public void redo() {
+	    if (canRedo()) {
+	        Command cmd = redoStack.pop();
+	        cmd.execute();            
+	        undoStack.push(cmd);
+	    }
+	    model.notifyObservers();
+	}
+
+	
+
+
 	
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX();
@@ -38,7 +84,9 @@ public class ControllerDrawing {
                 if(dlg.isOk()==true) {
                 	Point point = dlg.getPoint();
                 	Color color = dlg.getColor();
-                    model.add(point);
+                	point.setOutlineColor(color);
+                	executeCommand(new AddShapeCommand(model, point));
+                    
                 }
 			}
 			if(frame.getTglbtnLine().isSelected()) {
@@ -55,7 +103,8 @@ public class ControllerDrawing {
 					if(dlg.isOk()==true) {
 						Line line = dlg.getLine();
 						Color color = dlg.getColor();
-						 model.add(line);
+						line.setOutlineColor(color); 
+                        executeCommand(new AddShapeCommand(model, line));
 					}
 					startPoint = null;
 				}
@@ -68,7 +117,9 @@ public class ControllerDrawing {
 					Rectangle rectangle = dlg.getRectangle();
 					Color outlineColor = dlg.getOutlineColor();
 					Color innerColor = dlg.getInnerColor();
-					 model.add(rectangle);
+					rectangle.setOutlineColor(outlineColor);  
+	                rectangle.setInnerColor(innerColor);
+	                executeCommand(new AddShapeCommand(model, rectangle));
 				}
 			}
 			if(frame.getTglbtnCircle().isSelected()) {
@@ -80,7 +131,9 @@ public class ControllerDrawing {
 					Circle circle = dlg.getCircle();
 					Color innerColor = dlg.getInnerColor();
 					Color outlineColor = dlg.getOutlineColor();
-					 model.add(circle);
+					circle.setOutlineColor(outlineColor); 
+	                circle.setInnerColor(innerColor);
+	                executeCommand(new AddShapeCommand(model, circle));
 					
 				}
 			}
@@ -93,7 +146,9 @@ public class ControllerDrawing {
                 	Donut donut = dlg.getDonut();
                 	Color innerColor = dlg.getInnerColor();
                 	Color outlineColor = dlg.getOutlineColor();
-                	 model.add(donut);
+                    donut.setOutlineColor(outlineColor); 
+                    donut.setInnerColor(innerColor);
+                    executeCommand(new AddShapeCommand(model, donut));
                 	}
 			}
 		}
@@ -113,10 +168,10 @@ public class ControllerDrawing {
 	    for (Shape shape : model.getSelected()) {
 	        int result = JOptionPane.showConfirmDialog(null, "Are you sure?", "Confirmation", JOptionPane.YES_NO_OPTION);
 	        if (result == JOptionPane.YES_OPTION) {
-	            model.remove(shape);
+	        	executeCommand(new RemoveShapeCommand(model, shape));
 	        }
 	    }
-	    view.repaint();
+	   
 	}
 	
 	public void modifySelected() {
@@ -138,7 +193,7 @@ public class ControllerDrawing {
 	            modifyRectangle((Rectangle) shape);
 	        }
 	    }
-	    view.repaint();
+	   
 	}
 	
 	private void modifyPoint(Point point) {
@@ -148,9 +203,13 @@ public class ControllerDrawing {
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
-	        point.setX(Integer.parseInt(dlg.getTextPointX().getText()));
-	        point.setY(Integer.parseInt(dlg.getTextPointY().getText()));
-	        point.setOutlineColor(dlg.getColor());
+	    	 Point newState = new Point(
+	    	            Integer.parseInt(dlg.getTextPointX().getText()),
+	    	            Integer.parseInt(dlg.getTextPointY().getText())
+	    	        );
+	    	        newState.setOutlineColor(dlg.getColor());
+	    	        //Command pattern
+	    	        executeCommand(new UpdatePointCommand(point, newState));
 	    }
 	}
 	private void modifyLine(Line line) {
@@ -162,11 +221,15 @@ public class ControllerDrawing {
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
-	        line.getStartPoint().setX(Integer.parseInt(dlg.getTextFieldX1().getText()));
-	        line.getStartPoint().setY(Integer.parseInt(dlg.getTextFieldY1().getText()));
-	        line.getEndPoint().setX(Integer.parseInt(dlg.getTextFieldX2().getText()));
-	        line.getEndPoint().setY(Integer.parseInt(dlg.getTextFieldY2().getText()));
-	        line.setOutlineColor(dlg.getColor());
+	    	Line newState = new Line(
+	                new Point(Integer.parseInt(dlg.getTextFieldX1().getText()),
+	                         Integer.parseInt(dlg.getTextFieldY1().getText())),
+	                new Point(Integer.parseInt(dlg.getTextFieldX2().getText()),
+	                         Integer.parseInt(dlg.getTextFieldY2().getText()))
+	            );
+	            newState.setOutlineColor(dlg.getColor());
+	            
+	            executeCommand(new UpdateLineCommand(line, newState));
 	    }
 	}
 	private void modifyRectangle(Rectangle rectangle) {
@@ -178,12 +241,16 @@ public class ControllerDrawing {
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
-	        rectangle.getUpperLeftPoint().setX(Integer.parseInt(dlg.getTextFieldX().getText()));
-	        rectangle.getUpperLeftPoint().setY(Integer.parseInt(dlg.getTextFieldY().getText()));
-	        rectangle.setHeight(Integer.parseInt(dlg.getTextFieldHeight().getText()));
-	        rectangle.setWidth(Integer.parseInt(dlg.getTextFieldWidth().getText()));
-	        rectangle.setOutlineColor(dlg.getOutlineColor());
-	        rectangle.setInnerColor(dlg.getInnerColor());
+	    	Rectangle newState = new Rectangle(
+	                new Point(Integer.parseInt(dlg.getTextFieldX().getText()),
+	                         Integer.parseInt(dlg.getTextFieldY().getText())),
+	                Integer.parseInt(dlg.getTextFieldWidth().getText()),
+	                Integer.parseInt(dlg.getTextFieldHeight().getText())
+	            );
+	            newState.setOutlineColor(dlg.getOutlineColor());
+	            newState.setInnerColor(dlg.getInnerColor());
+	            
+	            executeCommand(new UpdateRectangleCommand(rectangle, newState));
 	    }
 	}
 	
@@ -195,11 +262,15 @@ public class ControllerDrawing {
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
-	        circle.getCenter().setX(Integer.parseInt(dlg.getTextFieldXCenter().getText()));
-	        circle.getCenter().setY(Integer.parseInt(dlg.getTextFieldYCenter().getText()));
-	        circle.setRadius(Integer.parseInt(dlg.getTextFieldRadius().getText()));
-	        circle.setOutlineColor(dlg.getOutlineColor());
-	        circle.setInnerColor(dlg.getInnerColor());
+	    	Circle newState = new Circle(
+	                new Point(Integer.parseInt(dlg.getTextFieldXCenter().getText()),
+	                         Integer.parseInt(dlg.getTextFieldYCenter().getText())),
+	                Integer.parseInt(dlg.getTextFieldRadius().getText())
+	            );
+	            newState.setOutlineColor(dlg.getOutlineColor());
+	            newState.setInnerColor(dlg.getInnerColor());
+	            
+	            executeCommand(new UpdateCircleCommand(circle, newState));
 	    }
 	}
 	private void modifyDonut(Donut donut) {
@@ -211,12 +282,16 @@ public class ControllerDrawing {
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
-	        donut.getCenter().setX(Integer.parseInt(dlg.getTextFieldXcenter().getText()));
-	        donut.getCenter().setY(Integer.parseInt(dlg.getTextFieldYcenter().getText()));
-	        donut.setRadius(Integer.parseInt(dlg.getTextFieldRadius().getText()));
-	        donut.setInnerRadius(Integer.parseInt(dlg.getTextFieldInner().getText()));
-	        donut.setOutlineColor(dlg.getOutlineColor());
-	        donut.setInnerColor(dlg.getInnerColor());
+	    	 Donut newState = new Donut(
+	    	            new Point(Integer.parseInt(dlg.getTextFieldXcenter().getText()),
+	    	                     Integer.parseInt(dlg.getTextFieldYcenter().getText())),
+	    	            Integer.parseInt(dlg.getTextFieldRadius().getText()),
+	    	            Integer.parseInt(dlg.getTextFieldInner().getText())
+	    	        );
+	    	        newState.setOutlineColor(dlg.getOutlineColor());
+	    	        newState.setInnerColor(dlg.getInnerColor());
+	    	        
+	    	        executeCommand(new UpdateDonutCommand(donut, newState));
 	    }
 	}
 	

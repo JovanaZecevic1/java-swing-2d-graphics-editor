@@ -79,7 +79,7 @@ public class Donut extends Circle {
 	}
 
 	@Override
-	public Shape clone() {
+	public Donut clone() {
 	    Donut cloned = new Donut(
 	        (Point) this.getCenter().clone(), 
 	        this.getRadius(), 
