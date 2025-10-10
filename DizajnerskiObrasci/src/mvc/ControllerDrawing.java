@@ -13,6 +13,7 @@ import command.AddShapeCommand;
 import command.RemoveShapeCommand;
 import command.UpdateCircleCommand;
 import command.UpdateDonutCommand;
+import command.UpdateHexagonCommand;
 import command.UpdateLineCommand;
 import command.UpdatePointCommand;
 import command.UpdateRectangleCommand;
@@ -149,7 +150,23 @@ public class ControllerDrawing {
                     donut.setInnerColor(innerColor);
                     executeCommand(new AddShapeCommand(model, donut));
                 	}
+                }
+			if (frame.getTglbtnHexagon().isSelected()) {
+			    DlgHexagon dlg = new DlgHexagon();
+			    dlg.getTextFieldX().setText(String.valueOf(x));
+			    dlg.getTextFieldY().setText(String.valueOf(y));
+			    dlg.setVisible(true);
+
+			    if (dlg.isOk()) {
+			        HexagonAdapter hexagon = dlg.getHexagon();
+			        Color innerColor = dlg.getInnerColor();
+			        Color outlineColor = dlg.getOutlineColor();
+			        hexagon.setOutlineColor(outlineColor); 
+			        hexagon.setInnerColor(innerColor);     
+			        executeCommand(new AddShapeCommand(model, hexagon));
+			    }
 			}
+
 		}
 		if(frame.getTglbtnSelect().isSelected()) {
 			model.selectShape(x,y);
@@ -190,6 +207,8 @@ public class ControllerDrawing {
 	            modifyCircle((Circle) shape);
 	        } else if (shape instanceof Rectangle) {
 	            modifyRectangle((Rectangle) shape);
+	        } else if (shape instanceof HexagonAdapter) {  
+	            modifyHexagon((HexagonAdapter) shape);
 	        }
 	    }
 	   
@@ -296,6 +315,27 @@ public class ControllerDrawing {
 	    	        
 	    	        executeCommand(new UpdateDonutCommand(model, donut, newState));
 	    	      
+	    }
+	}
+	private void modifyHexagon(HexagonAdapter hexagon) {
+	    DlgHexagon dlg = new DlgHexagon();
+	    dlg.getTextFieldX().setText(String.valueOf(hexagon.getX()));
+	    dlg.getTextFieldY().setText(String.valueOf(hexagon.getY()));
+	    dlg.getTextFieldRadius().setText(String.valueOf(hexagon.getR()));
+	    dlg.setOutlineColor(hexagon.getOutlineColor());  // ✅ Shape metoda
+	    dlg.setInnerColor(hexagon.getInnerColor());      // ✅ Shape metoda
+	    dlg.setVisible(true);
+	    
+	    if (dlg.isOk()) {
+	        HexagonAdapter newState = new HexagonAdapter(
+	            Integer.parseInt(dlg.getTextFieldX().getText()),
+	            Integer.parseInt(dlg.getTextFieldY().getText()),
+	            Integer.parseInt(dlg.getTextFieldRadius().getText())
+	        );
+	        newState.setOutlineColor(dlg.getOutlineColor());  // ✅ Shape metoda
+	        newState.setInnerColor(dlg.getInnerColor());      // ✅ Shape metoda
+	        
+	        executeCommand(new UpdateHexagonCommand(model, hexagon, newState));
 	    }
 	}
 	
