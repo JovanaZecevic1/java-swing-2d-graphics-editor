@@ -63,7 +63,7 @@ public class ModelDrawing implements Observable{
 	
 	//selekcija
 	
-	public void selectShape(int x, int y) {
+	public void selectShape(int x, int y,  boolean multiSelect) {
 		Shape clickedShape = null;
 		
 		
@@ -79,8 +79,10 @@ public class ModelDrawing implements Observable{
 		//ako nije kliknuto, deselektovati 
 		
 		if (clickedShape == null) {
-			clearSelection();
-			return;
+			if (!multiSelect) {
+	            clearSelection();
+	        }
+	        return;
 		}
 		
 		//da li je kliknuto na vec selektovan oblik
@@ -89,11 +91,16 @@ public class ModelDrawing implements Observable{
 			clickedShape.setSelected(false);
 			selectedShapes.remove(clickedShape);
 		}else {
-			//deselektovati sve ostalo i selektovati novi
-			clearSelection();
+			 if (!multiSelect) {
+	            clearSelection();
+	        }
 			clickedShape.setSelected(true);
 			selectedShapes.add(clickedShape);		}
 		notifyObservers();
+	}
+	
+	public void selectShape(int x, int y) {
+	    selectShape(x, y, false);
 	}
 	
 	public List<Shape> getSelected(){

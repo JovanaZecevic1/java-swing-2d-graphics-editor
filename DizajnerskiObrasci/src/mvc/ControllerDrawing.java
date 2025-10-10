@@ -169,7 +169,8 @@ public class ControllerDrawing {
 
 		}
 		if(frame.getTglbtnSelect().isSelected()) {
-			model.selectShape(x,y);
+			 boolean multiSelect = e.isControlDown();
+			model.selectShape(x,y, multiSelect);
 		}
 	}
 	
