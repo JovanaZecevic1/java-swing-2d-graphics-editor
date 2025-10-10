@@ -1,17 +1,20 @@
 package command;
 
 import geometry.Donut;
+import mvc.ModelDrawing;
 
 public class UpdateDonutCommand implements Command {
     
     private Donut donut;
     private Donut oldState;
     private Donut newState;
+    private ModelDrawing model;
     
-    public UpdateDonutCommand(Donut donut, Donut newState) {
+    public UpdateDonutCommand(ModelDrawing model, Donut donut, Donut newState) {
         this.donut = donut;
         this.oldState = donut.clone();  
         this.newState = newState;
+        this.model = model;
     }
     
     @Override
@@ -22,6 +25,7 @@ public class UpdateDonutCommand implements Command {
         donut.setInnerRadius(newState.getInnerRadius());
         donut.setOutlineColor(newState.getOutlineColor());
         donut.setInnerColor(newState.getInnerColor());
+        model.updateShape(donut);
     }
     
     @Override
@@ -32,5 +36,6 @@ public class UpdateDonutCommand implements Command {
         donut.setInnerRadius(oldState.getInnerRadius());
         donut.setOutlineColor(oldState.getOutlineColor());
         donut.setInnerColor(oldState.getInnerColor());
+        model.updateShape(donut);
     }
 }

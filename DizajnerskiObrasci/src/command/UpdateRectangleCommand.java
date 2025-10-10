@@ -1,6 +1,7 @@
 package command;
 
 import geometry.Rectangle;
+import mvc.ModelDrawing;
 import geometry.Point;
 import java.awt.Color;
 
@@ -9,11 +10,15 @@ public class UpdateRectangleCommand implements Command {
     private Rectangle rectangle;
     private Rectangle oldState;
     private Rectangle newState;
+    private ModelDrawing model;
     
-    public UpdateRectangleCommand(Rectangle rectangle, Rectangle newState) {
+    public UpdateRectangleCommand(ModelDrawing model, Rectangle rectangle, Rectangle newState) {
         this.rectangle = rectangle;
         this.oldState = rectangle.clone();
         this.newState = newState;
+        this.newState = newState;
+        this.model = model;
+        
     }
     
     @Override
@@ -24,6 +29,7 @@ public class UpdateRectangleCommand implements Command {
         rectangle.setHeight(newState.getHeight());
         rectangle.setOutlineColor(newState.getOutlineColor());
         rectangle.setInnerColor(newState.getInnerColor());
+        model.updateShape(rectangle);
     }
     
     @Override
@@ -34,5 +40,6 @@ public class UpdateRectangleCommand implements Command {
         rectangle.setHeight(oldState.getHeight());
         rectangle.setOutlineColor(oldState.getOutlineColor());
         rectangle.setInnerColor(oldState.getInnerColor());
+        model.updateShape(rectangle);
     }
 }

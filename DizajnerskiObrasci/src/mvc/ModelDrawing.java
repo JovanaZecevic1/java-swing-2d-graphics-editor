@@ -36,6 +36,12 @@ public class ModelDrawing implements Observable{
 		notifyObservers();
 	}
 	
+	public void updateShape(Shape shape) {
+	    // samo obaveštava
+	    notifyObservers();
+	}
+
+	
 	public List<Shape> getAll(){
 		return shapes;
 	}

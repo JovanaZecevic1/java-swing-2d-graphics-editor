@@ -42,30 +42,29 @@ public class ControllerDrawing {
 	}
 
 	// Pomoćna metoda
-	private void executeCommand(Command cmd) {
-	    cmd.execute();                   
-	                                      
+	private void executeCommand(Command cmd) {                                  
 	    undoStack.push(cmd);              
 	    redoStack.clear();  
-	    model.notifyObservers();
+	    cmd.execute(); 
+	    
 	}
 
 	public void undo() {
 	    if (canUndo()) {
-	        Command cmd = undoStack.pop();
-	        cmd.unexecute();              
+	        Command cmd = undoStack.pop();             
 	        redoStack.push(cmd);
+	        cmd.unexecute(); 
 	    }
-	    model.notifyObservers();
+	    
 	}
 
 	public void redo() {
 	    if (canRedo()) {
-	        Command cmd = redoStack.pop();
-	        cmd.execute();            
+	        Command cmd = redoStack.pop();         
 	        undoStack.push(cmd);
+	        cmd.execute();  
 	    }
-	    model.notifyObservers();
+	    
 	}
 
 	
@@ -209,7 +208,8 @@ public class ControllerDrawing {
 	    	        );
 	    	        newState.setOutlineColor(dlg.getColor());
 	    	        //Command pattern
-	    	        executeCommand(new UpdatePointCommand(point, newState));
+	    	        executeCommand(new UpdatePointCommand(model, point, newState));
+	    	        
 	    }
 	}
 	private void modifyLine(Line line) {
@@ -229,7 +229,8 @@ public class ControllerDrawing {
 	            );
 	            newState.setOutlineColor(dlg.getColor());
 	            
-	            executeCommand(new UpdateLineCommand(line, newState));
+	            executeCommand(new UpdateLineCommand(model, line, newState));
+	           
 	    }
 	}
 	private void modifyRectangle(Rectangle rectangle) {
@@ -250,7 +251,8 @@ public class ControllerDrawing {
 	            newState.setOutlineColor(dlg.getOutlineColor());
 	            newState.setInnerColor(dlg.getInnerColor());
 	            
-	            executeCommand(new UpdateRectangleCommand(rectangle, newState));
+	            executeCommand(new UpdateRectangleCommand(model, rectangle, newState));
+	           
 	    }
 	}
 	
@@ -270,7 +272,8 @@ public class ControllerDrawing {
 	            newState.setOutlineColor(dlg.getOutlineColor());
 	            newState.setInnerColor(dlg.getInnerColor());
 	            
-	            executeCommand(new UpdateCircleCommand(circle, newState));
+	            executeCommand(new UpdateCircleCommand(model, circle, newState));
+	           
 	    }
 	}
 	private void modifyDonut(Donut donut) {
@@ -291,7 +294,8 @@ public class ControllerDrawing {
 	    	        newState.setOutlineColor(dlg.getOutlineColor());
 	    	        newState.setInnerColor(dlg.getInnerColor());
 	    	        
-	    	        executeCommand(new UpdateDonutCommand(donut, newState));
+	    	        executeCommand(new UpdateDonutCommand(model, donut, newState));
+	    	      
 	    }
 	}
 	
