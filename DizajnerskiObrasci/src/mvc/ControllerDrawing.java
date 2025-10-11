@@ -256,6 +256,7 @@ public class ControllerDrawing {
 	    DlgPoint dlg = new DlgPoint();
 	    dlg.getTextPointX().setText(String.valueOf(point.getX()));
 	    dlg.getTextPointY().setText(String.valueOf(point.getY()));
+	    dlg.setColor(point.getOutlineColor());
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
@@ -275,6 +276,7 @@ public class ControllerDrawing {
 	    dlg.getTextFieldY1().setText(String.valueOf(line.getStartPoint().getY()));
 	    dlg.getTextFieldX2().setText(String.valueOf(line.getEndPoint().getX()));
 	    dlg.getTextFieldY2().setText(String.valueOf(line.getEndPoint().getY()));
+	    dlg.setColor(line.getOutlineColor());
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
@@ -296,14 +298,17 @@ public class ControllerDrawing {
 	    dlg.getTextFieldY().setText(String.valueOf(rectangle.getUpperLeftPoint().getY()));
 	    dlg.getTextFieldHeight().setText(String.valueOf(rectangle.getHeight()));
 	    dlg.getTextFieldWidth().setText(String.valueOf(rectangle.getWidth()));
+	    dlg.setOutlineColor(rectangle.getOutlineColor());
+	    dlg.setInnerColor(rectangle.getInnerColor());
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
 	    	Rectangle newState = new Rectangle(
 	                new Point(Integer.parseInt(dlg.getTextFieldX().getText()),
 	                         Integer.parseInt(dlg.getTextFieldY().getText())),
-	                Integer.parseInt(dlg.getTextFieldWidth().getText()),
-	                Integer.parseInt(dlg.getTextFieldHeight().getText())
+	                Integer.parseInt(dlg.getTextFieldHeight().getText()),
+	                Integer.parseInt(dlg.getTextFieldWidth().getText())
+	                
 	            );
 	            newState.setOutlineColor(dlg.getOutlineColor());
 	            newState.setInnerColor(dlg.getInnerColor());
@@ -318,6 +323,8 @@ public class ControllerDrawing {
 	    dlg.getTextFieldXCenter().setText(String.valueOf(circle.getCenter().getX()));
 	    dlg.getTextFieldYCenter().setText(String.valueOf(circle.getCenter().getY()));
 	    dlg.getTextFieldRadius().setText(String.valueOf(circle.getRadius()));
+	    dlg.setOutlineColor(circle.getOutlineColor());
+	    dlg.setInnerColor(circle.getInnerColor());
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
@@ -339,6 +346,8 @@ public class ControllerDrawing {
 	    dlg.getTextFieldYcenter().setText(String.valueOf(donut.getCenter().getY()));
 	    dlg.getTextFieldRadius().setText(String.valueOf(donut.getRadius()));
 	    dlg.getTextFieldInner().setText(String.valueOf(donut.getInnerRadius()));
+	    dlg.setOutlineColor(donut.getOutlineColor());
+	    dlg.setInnerColor(donut.getInnerColor());
 	    dlg.setVisible(true);
 	    
 	    if (dlg.isOk()) {
