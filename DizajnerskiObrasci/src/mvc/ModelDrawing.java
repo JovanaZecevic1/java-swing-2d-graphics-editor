@@ -1,5 +1,6 @@
 package mvc;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ public class ModelDrawing implements Observable{
 	private List<Shape> shapes = new ArrayList<Shape>();
 	private List<Shape> selectedShapes = new ArrayList<Shape>(); 
 	private List<Observer> observers = new ArrayList<Observer>();
+	
 	
 	public ModelDrawing() {
 		this.shapes = new ArrayList<>();
@@ -127,6 +129,7 @@ public class ModelDrawing implements Observable{
 		selectedShapes.remove(shape);
 		shape.setSelected(false);
 	}
+	
 
 	@Override
 	public void addObserver(Observer observer) {

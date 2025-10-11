@@ -17,6 +17,8 @@ import javax.swing.JToggleButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
+
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -59,13 +61,16 @@ public class FrameDrawing extends JFrame implements Observer{
     private JToggleButton tglbtnDonut;
     private JToggleButton tglbtnHexagon;
     private JPanel panel;
+    
+    private Color edgeColor = Color.BLACK;
+    private Color fillColor = Color.WHITE;
 
 
 	/**
 	 * Create the frame.
 	 */
 	public FrameDrawing(ModelDrawing model) {
-		
+	
 	    this.model = model;
 	    this.view = new ViewDrawing();
 	    this.controller = new ControllerDrawing(model, this);
@@ -128,6 +133,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		tglbtnDraw.setMaximumSize(btnSize);
 		tglbtnDraw.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				 model.clearSelection();
 			}
 		});
 		
@@ -213,17 +219,26 @@ public class FrameDrawing extends JFrame implements Observer{
 		panelWest.add(btnBringToBack);
 		btnBringToBack.setMaximumSize(btnSize);
 		
-		btnEdgeColor = new JButton("Edge Color");
+		btnEdgeColor = new JButton("Outline");
 		btnEdgeColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Color chosen = JColorChooser.showDialog(null, "Select Outline Color", btnEdgeColor.getBackground());
+		        if (chosen != null)
+		            controller.setActiveEdgeColor(chosen);
+
 			}
 		});
 		panelWest.add(btnEdgeColor);
 		btnEdgeColor.setMaximumSize(btnSize);
 		
-		btnFillColor = new JButton("Fill Color");
+		btnFillColor = new JButton("Inner");
 		btnFillColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				  Color chosen = JColorChooser.showDialog(null, "Select Edge Color", btnFillColor.getBackground());
+			        if (chosen != null)
+			            controller.setActiveFillColor(chosen);
+			
+				
 			}
 		});
 		panelWest.add(btnFillColor);
@@ -262,6 +277,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		panelCenter.add(panel);
 		
 	}
+	
 
 	@Override
 	public void update() {
@@ -282,8 +298,8 @@ public class FrameDrawing extends JFrame implements Observer{
 	    btnBringToBack.setEnabled(hasSingleSelection);
 	    
 	    // Dugmad za boje (potrebna je bar 1 selekcija)
-	    btnEdgeColor.setEnabled(hasSelection);
-	    btnFillColor.setEnabled(hasSelection);
+	    btnEdgeColor.setEnabled(true);
+	    btnFillColor.setEnabled(true);
 	    
 	    btnUndo.setEnabled(controller.canUndo());
 	    btnRedo.setEnabled(controller.canRedo());;
@@ -391,6 +407,9 @@ public class FrameDrawing extends JFrame implements Observer{
 	public void setController(ControllerDrawing controller) {
 		this.controller = controller;
 	}
+	
+
+
 
 }
 

@@ -32,6 +32,9 @@ public class ControllerDrawing {
 	
     private Stack<Command> undoStack = new Stack<>();
     private Stack<Command> redoStack = new Stack<>();
+    
+    private Color activeEdgeColor = Color.BLACK;
+    private Color activeFillColor = Color.WHITE;
 	
 	public ControllerDrawing(ModelDrawing model, FrameDrawing frame) {
 		this.model = model;
@@ -84,11 +87,14 @@ public class ControllerDrawing {
 				DlgPoint dlg = new DlgPoint();
 				dlg.getTextPointX().setText(String.valueOf(x));
                 dlg.getTextPointY().setText(String.valueOf(y));
+                dlg.setColor(activeEdgeColor);
                 dlg.setVisible(true);
                 if(dlg.isOk()==true) {
                 	Point point = dlg.getPoint();
                 	Color color = dlg.getColor();
                 	point.setOutlineColor(color);
+                	activeEdgeColor = color;
+                    frame.getBtnEdgeColor().setBackground(color);
                 	executeCommand(new AddShapeCommand(model, point));
                     
                 }
@@ -103,11 +109,14 @@ public class ControllerDrawing {
 					dlg.getTextFieldY1().setText(String.valueOf(startPoint.getY()));
 					dlg.getTextFieldX2().setText(String.valueOf(x));
 					dlg.getTextFieldY2().setText(String.valueOf(y));
+					dlg.setColor(activeEdgeColor);
 					dlg.setVisible(true);
 					if(dlg.isOk()==true) {
 						Line line = dlg.getLine();
 						Color color = dlg.getColor();
-						line.setOutlineColor(color); 
+						line.setOutlineColor(color);
+						activeEdgeColor = color;
+				        frame.getBtnEdgeColor().setBackground(color);
                         executeCommand(new AddShapeCommand(model, line));
 					}
 					startPoint = null;
@@ -116,6 +125,8 @@ public class ControllerDrawing {
 				DlgRectangle dlg = new DlgRectangle();
 				dlg.getTextFieldX().setText(String.valueOf(x));
 				dlg.getTextFieldY().setText(String.valueOf(y));
+				dlg.setOutlineColor(activeEdgeColor);
+			    dlg.setInnerColor(activeFillColor);
 				dlg.setVisible(true);
 				if(dlg.isOk()==true) {
 					Rectangle rectangle = dlg.getRectangle();
@@ -123,6 +134,10 @@ public class ControllerDrawing {
 					Color innerColor = dlg.getInnerColor();
 					rectangle.setOutlineColor(outlineColor);  
 	                rectangle.setInnerColor(innerColor);
+	                activeEdgeColor = outlineColor;
+	                activeFillColor = innerColor;
+	                frame.getBtnEdgeColor().setBackground(outlineColor);
+	                frame.getBtnFillColor().setBackground(innerColor);
 	                executeCommand(new AddShapeCommand(model, rectangle));
 				}
 			}
@@ -130,6 +145,8 @@ public class ControllerDrawing {
 				DlgCircle dlg = new DlgCircle();
 				dlg.getTextFieldXCenter().setText(String.valueOf(x));
 				dlg.getTextFieldYCenter().setText(String.valueOf(y));
+				dlg.setOutlineColor(activeEdgeColor);
+			    dlg.setInnerColor(activeFillColor);
 				dlg.setVisible(true);
 				if(dlg.isOk()) {
 					Circle circle = dlg.getCircle();
@@ -137,6 +154,10 @@ public class ControllerDrawing {
 					Color outlineColor = dlg.getOutlineColor();
 					circle.setOutlineColor(outlineColor); 
 	                circle.setInnerColor(innerColor);
+	                activeEdgeColor = outlineColor;
+	                activeFillColor = innerColor;
+	                frame.getBtnEdgeColor().setBackground(outlineColor);
+	                frame.getBtnFillColor().setBackground(innerColor);
 	                executeCommand(new AddShapeCommand(model, circle));
 					
 				}
@@ -145,6 +166,8 @@ public class ControllerDrawing {
 				DlgDonut dlg = new DlgDonut();
 				dlg.getTextFieldXcenter().setText(String.valueOf(x));
                 dlg.getTextFieldYcenter().setText(String.valueOf(y));
+                dlg.setOutlineColor(activeEdgeColor);
+                dlg.setInnerColor(activeFillColor);
                 dlg.setVisible(true);
                 if(dlg.isOk()) {
                 	Donut donut = dlg.getDonut();
@@ -152,6 +175,10 @@ public class ControllerDrawing {
                 	Color outlineColor = dlg.getOutlineColor();
                     donut.setOutlineColor(outlineColor); 
                     donut.setInnerColor(innerColor);
+                    activeEdgeColor = outlineColor;
+                    activeFillColor = innerColor;
+                    frame.getBtnEdgeColor().setBackground(outlineColor);
+                    frame.getBtnFillColor().setBackground(innerColor);
                     executeCommand(new AddShapeCommand(model, donut));
                 	}
                 }
@@ -159,6 +186,8 @@ public class ControllerDrawing {
 			    DlgHexagon dlg = new DlgHexagon();
 			    dlg.getTextFieldX().setText(String.valueOf(x));
 			    dlg.getTextFieldY().setText(String.valueOf(y));
+			    dlg.setOutlineColor(activeEdgeColor);
+			    dlg.setInnerColor(activeFillColor);
 			    dlg.setVisible(true);
 
 			    if (dlg.isOk()) {
@@ -166,7 +195,11 @@ public class ControllerDrawing {
 			        Color innerColor = dlg.getInnerColor();
 			        Color outlineColor = dlg.getOutlineColor();
 			        hexagon.setOutlineColor(outlineColor); 
-			        hexagon.setInnerColor(innerColor);     
+			        hexagon.setInnerColor(innerColor);   
+			        activeEdgeColor = outlineColor;
+			        activeFillColor = innerColor;
+			        frame.getBtnEdgeColor().setBackground(outlineColor);
+			        frame.getBtnFillColor().setBackground(innerColor);
 			        executeCommand(new AddShapeCommand(model, hexagon));
 			    }
 			}
@@ -371,6 +404,30 @@ public class ControllerDrawing {
 	        executeCommand(new BringToBackCommand(model, shape));
 	    }
 	}
+	
+	
+
+	public void setActiveFillColor(Color color) {
+	    this.activeFillColor = color;
+	    frame.getBtnFillColor().setBackground(color);
+	}
+
+	public Color getActiveEdgeColor() {
+	    return activeEdgeColor;
+	}
+
+	public Color getActiveFillColor() {
+	    return activeFillColor;
+	}
+
+	public void setActiveEdgeColor(Color color) {
+		 this.activeEdgeColor = color;
+		    frame.getBtnEdgeColor().setBackground(color);
+		
+	}
+
+
+
 
 	
 }
