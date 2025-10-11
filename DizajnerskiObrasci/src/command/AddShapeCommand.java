@@ -22,5 +22,9 @@ public class AddShapeCommand implements Command {
     public void unexecute() {
         model.remove(shape);
     }
+    @Override
+    public String executeLog() {
+    	return "Added: " + shape.getShapeName() + ": " + shape.toString();
+    }
 
 }

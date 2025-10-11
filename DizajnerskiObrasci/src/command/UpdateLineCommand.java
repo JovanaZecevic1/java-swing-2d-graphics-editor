@@ -40,4 +40,12 @@ public class UpdateLineCommand implements Command {
         line.setOutlineColor(oldState.getOutlineColor());
         model.updateShape(line);
     }
+    
+    
+    	@Override
+    	public String executeLog() {
+    	    return "Updated: " + line.getShapeName() + " [" + 
+    	           oldState + "] -> [" + 
+    	           newState + "]";
+    	}
 }

@@ -28,5 +28,9 @@ public class BringToFrontCommand implements Command{
     	model.getAll().remove(shape);
         model.addAt(oldIndex, shape);
     }
+    @Override
+    public String executeLog() {
+        return "Bring To Front: " + shape.getClass().getSimpleName();
+    }
 
 }

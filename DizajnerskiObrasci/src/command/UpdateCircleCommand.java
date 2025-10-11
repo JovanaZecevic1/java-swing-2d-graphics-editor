@@ -39,4 +39,10 @@ public class UpdateCircleCommand implements Command {
         circle.setInnerColor(oldState.getInnerColor());
         model.updateShape(circle);
     }
+    @Override
+    public String executeLog() {
+        return "Updated: " + circle.getShapeName() + " [" + 
+               oldState + "] -> [" + 
+               newState + "]";
+    }
 }

@@ -34,4 +34,10 @@ public class UpdateHexagonCommand implements Command{
 	        hexagon.setInnerColor(newState.getInnerColor());
 	        model.updateShape(hexagon);
 	    }
+	    @Override
+	    public String executeLog() {
+	        return "Updated: " + hexagon.getShapeName() + " [" + 
+	               oldState + "] -> [" + 
+	               newState + "]";
+	    }
 }

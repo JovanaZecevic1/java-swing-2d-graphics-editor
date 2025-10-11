@@ -32,4 +32,12 @@ public class UpdatePointCommand implements Command {
         point.setOutlineColor(oldState.getOutlineColor());
         model.updateShape(point);
     }
+    
+   
+    @Override
+    public String executeLog() {
+        return "Updated: " + point.getShapeName() + " [" + 
+               oldState + "] -> [" + 
+               newState + "]";
+    }
 }

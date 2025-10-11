@@ -4,7 +4,10 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import observer.Observer;
@@ -16,6 +19,7 @@ import java.awt.Dimension;
 import javax.swing.JToggleButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
@@ -61,9 +65,11 @@ public class FrameDrawing extends JFrame implements Observer{
     private JToggleButton tglbtnDonut;
     private JToggleButton tglbtnHexagon;
     private JPanel panel;
+    private DefaultListModel<String> logListModel;
+    private JList<String> logList;
     
-    private Color edgeColor = Color.BLACK;
-    private Color fillColor = Color.WHITE;
+    //private Color edgeColor = Color.BLACK;
+    //private Color fillColor = Color.WHITE;
 
 
 	/**
@@ -276,6 +282,20 @@ public class FrameDrawing extends JFrame implements Observer{
 		panel = new JPanel();
 		panelCenter.add(panel);
 		
+		JPanel panelEast = new JPanel();
+	    panelEast.setLayout(new BorderLayout());
+	    contentPane.add(panelEast, BorderLayout.EAST);
+	    
+	    JLabel lblLog = new JLabel("Command Log:");
+	    panelEast.add(lblLog, BorderLayout.NORTH);
+	    
+	    logListModel = new DefaultListModel<>();
+	    logList = new JList<>(logListModel);
+	    JScrollPane scrollPane = new JScrollPane(logList);
+	    scrollPane.setPreferredSize(new Dimension(250, 0));
+	    panelEast.add(scrollPane, BorderLayout.CENTER);
+		
+		
 	}
 	
 
@@ -287,7 +307,7 @@ public class FrameDrawing extends JFrame implements Observer{
 	    int totalShapes = model.getSize();
 	    
 	    // Dugmad koja zavise od selekcije
-	    btnModify.setEnabled(hasSelection);
+	    btnModify.setEnabled(selectedCount == 1);
 	    btnDelete.setEnabled(hasSelection);
 	    
 	    // Dugmad za pomeranje po Z-osi (potrebna je tačno 1 selekcija)
@@ -311,6 +331,11 @@ public class FrameDrawing extends JFrame implements Observer{
 	    btnOpen.setEnabled(true);
 		
 	}
+	
+	public DefaultListModel<String> getLogListModel() {
+	    return logListModel;
+	}
+	
 
 	public JToggleButton getTglbtnDraw() {
 		return tglbtnDraw;

@@ -31,5 +31,9 @@ public class ToFrontCommand implements Command {
              model.addAt(oldIndex, shape);
         }
     }
+    @Override
+    public String executeLog() {
+        return "To Front: " + shape.getClass().getSimpleName();
+    }
 
 }

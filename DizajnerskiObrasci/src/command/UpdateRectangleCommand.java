@@ -42,4 +42,10 @@ public class UpdateRectangleCommand implements Command {
         rectangle.setInnerColor(oldState.getInnerColor());
         model.updateShape(rectangle);
     }
+    @Override
+    public String executeLog() {
+        return "Updated: " + rectangle.getShapeName() + " [" + 
+               oldState + "] -> [" + 
+               newState + "]";
+    }
 }

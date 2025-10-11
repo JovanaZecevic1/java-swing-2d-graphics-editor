@@ -38,4 +38,10 @@ public class UpdateDonutCommand implements Command {
         donut.setInnerColor(oldState.getInnerColor());
         model.updateShape(donut);
     }
+    @Override
+    public String executeLog() {
+        return "Updated: " + donut.getShapeName() + " [" + 
+               oldState + "] -> [" + 
+               newState + "]";
+    }
 }

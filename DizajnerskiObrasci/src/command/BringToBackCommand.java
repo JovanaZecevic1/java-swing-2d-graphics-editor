@@ -27,5 +27,9 @@ public class BringToBackCommand implements Command {
     	 model.getAll().remove(shape);
          model.addAt(oldIndex, shape);
     }
+    @Override
+    public String executeLog() {
+        return "Bring To Back: " + shape.getClass().getSimpleName();
+    }
 
 }

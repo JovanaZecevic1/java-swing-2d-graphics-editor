@@ -12,6 +12,10 @@ public abstract class Shape implements Moveable, Comparable{
 		
 	}
   	
+  	public String getShapeName() {
+  	    return this.getClass().getSimpleName();
+  	}
+  	
   	public abstract Shape clone(); 
 	
 	public Shape (boolean selected) {

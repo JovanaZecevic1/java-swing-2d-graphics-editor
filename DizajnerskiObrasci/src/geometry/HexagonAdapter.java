@@ -91,7 +91,7 @@ public class HexagonAdapter extends Shape{
 
     @Override
     public String toString() {
-        return "Hexagon: center(" + getX() + "," + getY() + "), r=" + getR();
+        return "center(" + getX() + "," + getY() + "), r=" + getR();
     }
 
     @Override
@@ -113,6 +113,11 @@ public class HexagonAdapter extends Shape{
         clone.setInnerColor(this.getInnerColor());
         clone.setSelected(this.isSelected());
         return clone;
+    }
+    
+    @Override
+    public String getShapeName() {
+        return "Hexagon";
     }
 
 

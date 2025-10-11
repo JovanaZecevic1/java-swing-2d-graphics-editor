@@ -30,5 +30,9 @@ public class ToBackCommand implements Command{
     	 model.getAll().remove(shape);
          model.addAt(oldIndex, shape);
     }
+    @Override
+    public String executeLog() {
+        return "To Back: " + shape.getClass().getSimpleName();
+    }
 
 }

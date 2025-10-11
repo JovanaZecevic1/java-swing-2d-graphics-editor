@@ -81,7 +81,7 @@ public class Rectangle extends Shape {
 	@Override
 	public String toString() {
 		//return "Upper left point: (" + this.upperLeftPoint.getX() + "," + this.upperLeftPoint.getY() + "), width = "+ this.width + ", height = "+ this.height;
-		return "Upper left point: " + this.upperLeftPoint + ", width = "+ this.width + ", height = "+ this.height;
+		 return "upperLeft=" + upperLeftPoint + ", width=" + width + ", height=" + height;
 	}
 	@Override
 	public boolean equals(Object o) {

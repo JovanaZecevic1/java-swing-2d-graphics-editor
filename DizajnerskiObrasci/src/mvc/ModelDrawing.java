@@ -17,6 +17,7 @@ public class ModelDrawing implements Observable{
 	private List<Observer> observers = new ArrayList<Observer>();
 	
 	
+	
 	public ModelDrawing() {
 		this.shapes = new ArrayList<>();
 		this.selectedShapes = new ArrayList<>();

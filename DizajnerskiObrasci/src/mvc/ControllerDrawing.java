@@ -54,6 +54,7 @@ public class ControllerDrawing {
 	    undoStack.push(cmd);              
 	    redoStack.clear();  
 	    cmd.execute(); 
+	    frame.getLogListModel().addElement(cmd.executeLog());
 	    
 	}
 
@@ -62,6 +63,7 @@ public class ControllerDrawing {
 	        Command cmd = undoStack.pop();             
 	        redoStack.push(cmd);
 	        cmd.unexecute(); 
+	        frame.getLogListModel().addElement("Undo: " + cmd.executeLog());
 	    }
 	    
 	}
@@ -71,6 +73,7 @@ public class ControllerDrawing {
 	        Command cmd = redoStack.pop();         
 	        undoStack.push(cmd);
 	        cmd.execute();  
+	        frame.getLogListModel().addElement("Redo: " + cmd.executeLog());
 	    }
 	    
 	}
@@ -434,6 +437,8 @@ public class ControllerDrawing {
 		    frame.getBtnEdgeColor().setBackground(color);
 		
 	}
+	
+
 
 
 

@@ -24,4 +24,8 @@ public class RemoveShapeCommand implements Command {
     public void unexecute() {
         model.addAt(index, shape);  
     }
+    @Override
+    public String executeLog() {
+        return "Removed: " + shape.toString();
+    }
 }
