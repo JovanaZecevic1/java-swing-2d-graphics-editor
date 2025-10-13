@@ -14,32 +14,29 @@ public class UpdateRectangleCommand implements Command {
     
     public UpdateRectangleCommand(Rectangle rectangle, Rectangle newState) {
         this.rectangle = rectangle;
-        this.oldState = rectangle.clone();
-        this.newState = newState;
-        this.newState = newState;
-        
-        
+        this.oldState = new Rectangle();
+        this.newState = newState; 
     }
     
     @Override
     public void execute() {
-        rectangle.getUpperLeftPoint().setX(newState.getUpperLeftPoint().getX());
-        rectangle.getUpperLeftPoint().setY(newState.getUpperLeftPoint().getY());
-        rectangle.setWidth(newState.getWidth());
-        rectangle.setHeight(newState.getHeight());
+       /* rectangle.setHeight(newState.getHeight());
         rectangle.setOutlineColor(newState.getOutlineColor());
-        rectangle.setInnerColor(newState.getInnerColor());
+        rectangle.setInnerColor(newState.getInnerColor());*/
+        oldState.clone(rectangle);
+        rectangle.clone(newState);
         
     }
     
     @Override
     public void unexecute() {
-        rectangle.getUpperLeftPoint().setX(oldState.getUpperLeftPoint().getX());
-        rectangle.getUpperLeftPoint().setY(oldState.getUpperLeftPoint().getY());
-        rectangle.setWidth(oldState.getWidth());
-        rectangle.setHeight(oldState.getHeight());
+    	/*rectangle.setHeight(oldState.getHeight());
         rectangle.setOutlineColor(oldState.getOutlineColor());
-        rectangle.setInnerColor(oldState.getInnerColor());
+        rectangle.setInnerColor(oldState.getInnerColor());*/
+    	if(oldState != null) {
+    		rectangle.clone(oldState);
+        }
+        return;
        
     }
     @Override

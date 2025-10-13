@@ -15,29 +15,37 @@ public class UpdateLineCommand implements Command {
     
     public UpdateLineCommand(Line line, Line newState) {
         this.line = line;
-        this.oldState = line.clone();
-        this.newState = newState;
+        this.oldState = new Line();
         this.newState = newState;
        
     }
     
     @Override
     public void execute() {
-        line.getStartPoint().setX(newState.getStartPoint().getX());
+       /* line.getStartPoint().setX(newState.getStartPoint().getX());
         line.getStartPoint().setY(newState.getStartPoint().getY());
         line.getEndPoint().setX(newState.getEndPoint().getX());
         line.getEndPoint().setY(newState.getEndPoint().getY());
         line.setOutlineColor(newState.getOutlineColor());
-     
+     */
+    	oldState.clone(line);
+    	line.clone(newState);
     }
     
     @Override
     public void unexecute() {
-        line.getStartPoint().setX(oldState.getStartPoint().getX());
+       /* line.getStartPoint().setX(oldState.getStartPoint().getX());
         line.getStartPoint().setY(oldState.getStartPoint().getY());
         line.getEndPoint().setX(oldState.getEndPoint().getX());
         line.getEndPoint().setY(oldState.getEndPoint().getY());
         line.setOutlineColor(oldState.getOutlineColor());
+        */
+    	
+    	 if (oldState != null) {
+    		 line.clone(oldState);
+         }
+    	 return;
+         
        
     }
     

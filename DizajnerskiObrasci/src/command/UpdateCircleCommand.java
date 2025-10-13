@@ -9,34 +9,38 @@ import java.awt.Color;
 public class UpdateCircleCommand implements Command {
     
     private Circle circle;
-    private Circle oldState;
+    private Circle oldState = new Circle();
     private Circle newState;
  
     
     public UpdateCircleCommand(Circle circle, Circle newState) {
         this.circle = circle;
-        this.oldState = circle.clone();
+        this.oldState = new Circle();
         this.newState = newState;
         
     }
     
     @Override
     public void execute() {
-        circle.getCenter().setX(newState.getCenter().getX());
-        circle.getCenter().setY(newState.getCenter().getY());
-        circle.setRadius(newState.getRadius());
-        circle.setOutlineColor(newState.getOutlineColor());
-        circle.setInnerColor(newState.getInnerColor());
+    	
+    	/*donut.setInnerRadius(newState.getInnerRadius());
+        donut.setOutlineColor(newState.getOutlineColor());
+        donut.setInnerColor(newState.getInnerColor());*/
+        oldState.clone(circle);
+        circle.clone(newState);
         
     }
     
     @Override
     public void unexecute() {
-        circle.getCenter().setX(oldState.getCenter().getX());
-        circle.getCenter().setY(oldState.getCenter().getY());
-        circle.setRadius(oldState.getRadius());
-        circle.setOutlineColor(oldState.getOutlineColor());
-        circle.setInnerColor(oldState.getInnerColor());
+      /*donut.setInnerRadius(oldState.getInnerRadius());
+        donut.setOutlineColor(oldState.getOutlineColor());
+        donut.setInnerColor(oldState.getInnerColor());*/
+    	
+    	if (oldState != null) {
+    		circle.clone(oldState);  
+        }
+        return;
        
     }
     @Override

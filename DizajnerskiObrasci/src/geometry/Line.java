@@ -101,14 +101,12 @@ public class Line extends Shape{
 	}
 	
 	@Override
-	public Line clone() {
-	    Line cloned = new Line(
-	        (Point) this.startPoint.clone(), 
-	        (Point) this.endPoint.clone()
-	    );
-	    cloned.setOutlineColor(this.getOutlineColor());
-	    cloned.setSelected(this.isSelected());
-	    return cloned;
+	public Line clone(Shape newLine) {
+		Line line = (Line) newLine;
+		this.setStartPoint(line.getStartPoint());
+		this.setEndPoint(line.getEndPoint());
+		this.setOutlineColor(line.getOutlineColor());
+		return this;
 	}
 
 

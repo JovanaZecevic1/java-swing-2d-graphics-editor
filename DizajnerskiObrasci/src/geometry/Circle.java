@@ -101,14 +101,16 @@ public class Circle extends Shape{
 
 	}
 	@Override
-	public Circle clone() {
-	    Circle cloned = new Circle(
-	        (Point) this.center.clone(), 
-	        this.radius
-	    );
-	    cloned.setOutlineColor(this.getOutlineColor());
-	    cloned.setInnerColor(this.getInnerColor());
-	    cloned.setSelected(this.isSelected());
-	    return cloned;
+	public Circle clone( Shape newCircle) {
+		if (newCircle == null) {
+			return null;
+		}
+		Circle circle = (Circle) newCircle;
+		this.getCenter().setX(circle.getCenter().getX());
+		this.getCenter().setY(circle.getCenter().getY());
+		this.setRadius(circle.getRadius());
+		this.setOutlineColor(circle.getOutlineColor());
+		this.setInnerColor(circle.getInnerColor());
+		return this;
 	}
 }

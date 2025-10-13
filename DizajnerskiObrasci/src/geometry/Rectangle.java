@@ -111,16 +111,14 @@ public class Rectangle extends Shape {
 	}
 	
 	@Override
-	public Rectangle clone() {
-	    Rectangle cloned = new Rectangle(
-	        (Point) this.upperLeftPoint.clone(), 
-	        this.height, 
-	        this.width
-	    );
-	    cloned.setOutlineColor(this.getOutlineColor());
-	    cloned.setInnerColor(this.getInnerColor());
-	    cloned.setSelected(this.isSelected());
-	    return cloned;
+	public Rectangle clone(Shape newRectangle) {
+		Rectangle rectangle = (Rectangle) newRectangle;
+		this.setUpperLeftPoint(rectangle.getUpperLeftPoint());
+		this.setWidth(rectangle.getWidth());
+		this.setHeight(rectangle.getHeight());
+		this.setOutlineColor(rectangle.getOutlineColor());
+		this.setInnerColor(rectangle.getInnerColor());
+		return this;
 	}
 
 }

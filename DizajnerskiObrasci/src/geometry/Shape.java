@@ -18,7 +18,7 @@ public abstract class Shape implements Moveable, Comparable, Serializable{
   	    return this.getClass().getSimpleName();
   	}
   	
-  	public abstract Shape clone(); 
+  	public abstract Shape clone(Shape shape);
 	
 	public Shape (boolean selected) {
 		this.selected = selected;

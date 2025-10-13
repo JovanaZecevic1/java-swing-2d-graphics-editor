@@ -12,6 +12,7 @@ public class HexagonAdapter extends Shape{
         this.hexagon = new Hexagon(x, y, r);
     }
 
+
     public Hexagon getHexagon() {
         return hexagon;
     }
@@ -101,18 +102,32 @@ public class HexagonAdapter extends Shape{
         }
         return 0;
     }
+    public Point getCenter() {
+		return new Point(this.hexagon.getX(), this.hexagon.getY());
+	}
+
+	public void setCenter(Point center) {
+		this.hexagon.setX(center.getX());
+		this.hexagon.setY(center.getY());
+	}
+	
+	 public void setRadius(int radius) {
+	    	if (radius < 0)
+				throw new IllegalArgumentException("Invalid");
+	        this.hexagon.setR(radius);
+	    }
+	    public int getRadius() {
+	    	return this.hexagon.getR();
+	    }
 
     @Override
-    public HexagonAdapter clone() {
-        HexagonAdapter clone = new HexagonAdapter(
-            this.getX(),
-            this.getY(),
-            this.getR()
-        );
-        clone.setOutlineColor(this.getOutlineColor());
-        clone.setInnerColor(this.getInnerColor());
-        clone.setSelected(this.isSelected());
-        return clone;
+    public HexagonAdapter clone(Shape newHexagon) {
+    	 HexagonAdapter hexagon = (HexagonAdapter) newHexagon;
+         this.setCenter(hexagon.getCenter());
+         this.setRadius(hexagon.getRadius());
+         this.setOutlineColor(hexagon.getOutlineColor());
+         this.setInnerColor(hexagon.getInnerColor());
+         return this;
     }
     
     @Override

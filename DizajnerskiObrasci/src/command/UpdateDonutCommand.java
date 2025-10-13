@@ -12,29 +12,29 @@ public class UpdateDonutCommand implements Command {
     
     public UpdateDonutCommand(Donut donut, Donut newState) {
         this.donut = donut;
-        this.oldState = donut.clone();  
+        this.oldState = new Donut();  
         this.newState = newState;
     }
     
     @Override
     public void execute() {
-        donut.getCenter().setX(newState.getCenter().getX());
-        donut.getCenter().setY(newState.getCenter().getY());
-        donut.setRadius(newState.getRadius());
-        donut.setInnerRadius(newState.getInnerRadius());
+    	/*donut.setInnerRadius(newState.getInnerRadius());
         donut.setOutlineColor(newState.getOutlineColor());
-        donut.setInnerColor(newState.getInnerColor());
+        donut.setInnerColor(newState.getInnerColor());*/
+       oldState.clone(donut);
+       donut.clone(newState);
         
     }
     
     @Override
     public void unexecute() {
-        donut.getCenter().setX(oldState.getCenter().getX());
-        donut.getCenter().setY(oldState.getCenter().getY());
-        donut.setRadius(oldState.getRadius());
-        donut.setInnerRadius(oldState.getInnerRadius());
+    	/*donut.setInnerRadius(oldState.getInnerRadius());
         donut.setOutlineColor(oldState.getOutlineColor());
-        donut.setInnerColor(oldState.getInnerColor());
+        donut.setInnerColor(oldState.getInnerColor());*/
+    	if (oldState != null) {
+    		donut.clone(newState);   
+        }
+        return;
         
     }
     @Override
