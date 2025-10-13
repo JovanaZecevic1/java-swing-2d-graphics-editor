@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -22,6 +23,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -253,6 +255,31 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String[] options = {"Save Log", "Save Drawing"};
+		        int choice = JOptionPane.showOptionDialog(
+		                null,
+		                "Select what to save:",
+		                "Save Options",
+		                JOptionPane.DEFAULT_OPTION,
+		                JOptionPane.QUESTION_MESSAGE,
+		                null,
+		                options,
+		                options[0]
+		        );
+
+		        if(choice == JOptionPane.CLOSED_OPTION) return;
+
+		        JFileChooser fileChooser = new JFileChooser();
+		        int result = fileChooser.showSaveDialog(null);
+		        if(result != JFileChooser.APPROVE_OPTION) return;
+
+		        String path = fileChooser.getSelectedFile().getAbsolutePath();
+
+		        if(choice == 0) {
+		            controller.saveLog(path);      // Prosledjujemo putanju
+		        } else if(choice == 1) {
+		            controller.saveDrawing(path);  // Prosledjujemo putanju
+		        }
 			}
 		});
 		panelWest.add(btnSave);
@@ -261,6 +288,31 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnOpen = new JButton("Open");
 		btnOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			        String[] options = {"Load Log", "Load Drawing"};
+			        int choice = JOptionPane.showOptionDialog(
+			                null,
+			                "Select what to load:",
+			                "Load Options",
+			                JOptionPane.DEFAULT_OPTION,
+			                JOptionPane.QUESTION_MESSAGE,
+			                null,
+			                options,
+			                options[0]
+			        );
+
+			        if(choice == JOptionPane.CLOSED_OPTION) return;
+
+			        JFileChooser fileChooser = new JFileChooser();
+			        int result = fileChooser.showOpenDialog(null);
+			        if(result != JFileChooser.APPROVE_OPTION) return;
+
+			        String path = fileChooser.getSelectedFile().getAbsolutePath();
+
+			        if(choice == 0) {
+			            controller.loadLog(path);
+			        } else if(choice == 1) {
+			            controller.loadDrawing(path);
+			        }
 			}
 		});
 		panelWest.add(btnOpen);

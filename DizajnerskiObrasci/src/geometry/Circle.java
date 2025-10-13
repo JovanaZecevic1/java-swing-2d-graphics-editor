@@ -73,7 +73,7 @@ public class Circle extends Shape{
 	@Override
 	public String toString() {
 		//Center = (x,y), radius = radius
-		return "center = " + this.center.toString() + ", radius = " + this.radius;
+		return "Circle(" + center.getX() + "," + center.getY() + "," + radius + "," + getOutlineColor().getRGB() + "," + getInnerColor().getRGB() + ")";
 	}
 	@Override
 	public boolean equals(Object obj) {

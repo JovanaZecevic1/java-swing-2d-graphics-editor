@@ -8,13 +8,12 @@ public class UpdateDonutCommand implements Command {
     private Donut donut;
     private Donut oldState;
     private Donut newState;
-    private ModelDrawing model;
     
-    public UpdateDonutCommand(ModelDrawing model, Donut donut, Donut newState) {
+    
+    public UpdateDonutCommand(Donut donut, Donut newState) {
         this.donut = donut;
         this.oldState = donut.clone();  
         this.newState = newState;
-        this.model = model;
     }
     
     @Override
@@ -25,7 +24,7 @@ public class UpdateDonutCommand implements Command {
         donut.setInnerRadius(newState.getInnerRadius());
         donut.setOutlineColor(newState.getOutlineColor());
         donut.setInnerColor(newState.getInnerColor());
-        model.updateShape(donut);
+        
     }
     
     @Override
@@ -36,12 +35,12 @@ public class UpdateDonutCommand implements Command {
         donut.setInnerRadius(oldState.getInnerRadius());
         donut.setOutlineColor(oldState.getOutlineColor());
         donut.setInnerColor(oldState.getInnerColor());
-        model.updateShape(donut);
+        
     }
     @Override
     public String executeLog() {
-        return "Updated: " + donut.getShapeName() + " [" + 
-               oldState + "] -> [" + 
-               newState + "]";
+        return "Updated: " +
+               oldState.toString() + "->" + 
+               newState.toString();
     }
 }

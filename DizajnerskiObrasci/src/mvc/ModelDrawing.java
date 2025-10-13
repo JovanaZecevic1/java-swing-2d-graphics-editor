@@ -2,6 +2,7 @@ package mvc;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Iterator;
 
@@ -101,6 +102,23 @@ public class ModelDrawing implements Observable{
 			selectedShapes.add(clickedShape);		}
 		notifyObservers();
 	}
+	public Shape getShapeAt(int x, int y) {
+	    for (int i = shapes.size() - 1; i >= 0; i--) {
+	        Shape shape = shapes.get(i);
+	        if (shape.contains(x, y)) {
+	            return shape;
+	        }
+	    }
+	    return null;
+	}
+
+	
+	 public void deselectShape(Shape shape) {
+	        if (shape.isSelected()) {
+	            shape.setSelected(false);
+	        }
+	        notifyObservers();
+	    }
 	
 	public void selectShape(int x, int y) {
 	    selectShape(x, y, false);
@@ -129,6 +147,40 @@ public class ModelDrawing implements Observable{
 	public void removeFromSelection(Shape shape) {
 		selectedShapes.remove(shape);
 		shape.setSelected(false);
+	}
+	
+	public void toFront(Shape shape) {
+		int index = shapes.indexOf(shape);
+		if(index != -1 && index != shapes.size() - 1) {
+			Collections.swap(shapes, index, index + 1);
+		}
+		notifyObservers();
+	}
+
+	public void toBack(Shape shape) {
+		int index = shapes.indexOf(shape);
+		if(index > 0) {
+			Collections.swap(shapes, index, index - 1);
+		}
+		notifyObservers();
+	}
+
+	public void bringToFront(Shape shape) {
+        int index = shapes.indexOf(shape);
+        if (index != -1 && index < shapes.size() - 1) {
+            shapes.remove(index);
+            shapes.add(shape);
+        }
+        notifyObservers();
+    }
+
+    public void bringToBack(Shape shape) {
+        int index = shapes.indexOf(shape);
+        if (index > 0) {
+            shapes.remove(index);
+            shapes.add(0, shape);
+        }
+        notifyObservers();
 	}
 	
 

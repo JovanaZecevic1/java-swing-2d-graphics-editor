@@ -15,21 +15,16 @@ public class BringToBackCommand implements Command {
     
     @Override
     public void execute() {
-    	oldIndex = model.indexOf(shape);
-        if (oldIndex <= 0) return;
-
-        model.getAll().remove(shape);
-        model.addAt(0, shape); // dodaje na početak liste (najniža pozicija)
+    	model.bringToBack(shape);  
     }
     
     @Override
     public void unexecute() {
-    	 model.getAll().remove(shape);
-         model.addAt(oldIndex, shape);
+    	model.bringToFront(shape);
     }
     @Override
     public String executeLog() {
-        return "Bring To Back: " + shape.getClass().getSimpleName();
+        return "Bring To Back: " + shape.toString();
     }
 
 }

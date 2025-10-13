@@ -112,7 +112,7 @@ public class Donut extends Circle {
 	/*super se moze iskoristiti kako bi se pristupilo public varijabli ili metodi nadklase*/
 	@Override
 	public String toString() {
-		return super.toString() + ", innerRadius = " + this.innerRadius;
+		return "Donut(" + getCenter().getX() + "," + getCenter().getY() + "," + getRadius() + "," + innerRadius + ","  + getOutlineColor().getRGB() + "," + getInnerColor().getRGB() + ")";
 	}
 	@Override
 	public boolean equals(Object obj) {

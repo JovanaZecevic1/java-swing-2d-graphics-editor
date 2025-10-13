@@ -16,21 +16,16 @@ public class BringToFrontCommand implements Command{
     
     @Override
     public void execute() {
-    	oldIndex = model.indexOf(shape);
-        if (oldIndex == -1 || oldIndex == model.getSize() - 1) return;
-
-        model.getAll().remove(shape);
-        model.add(shape);
+    	model.bringToFront(shape);
     }
     
     @Override
     public void unexecute() {
-    	model.getAll().remove(shape);
-        model.addAt(oldIndex, shape);
+    	model.bringToBack(shape);
     }
     @Override
     public String executeLog() {
-        return "Bring To Front: " + shape.getClass().getSimpleName();
+        return "Bring To Front: " + shape.toString();
     }
 
 }

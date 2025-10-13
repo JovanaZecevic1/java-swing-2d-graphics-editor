@@ -24,7 +24,7 @@ public class AddShapeCommand implements Command {
     }
     @Override
     public String executeLog() {
-    	return "Added: " + shape.getShapeName() + ": " + shape.toString();
+    	return "Added: " + shape.toString();
     }
 
 }

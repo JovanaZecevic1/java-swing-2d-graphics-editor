@@ -11,13 +11,13 @@ public class UpdateCircleCommand implements Command {
     private Circle circle;
     private Circle oldState;
     private Circle newState;
-    private ModelDrawing model;
+ 
     
-    public UpdateCircleCommand(ModelDrawing model, Circle circle, Circle newState) {
+    public UpdateCircleCommand(Circle circle, Circle newState) {
         this.circle = circle;
         this.oldState = circle.clone();
         this.newState = newState;
-        this.model = model;
+        
     }
     
     @Override
@@ -27,7 +27,7 @@ public class UpdateCircleCommand implements Command {
         circle.setRadius(newState.getRadius());
         circle.setOutlineColor(newState.getOutlineColor());
         circle.setInnerColor(newState.getInnerColor());
-        model.updateShape(circle);
+        
     }
     
     @Override
@@ -37,12 +37,12 @@ public class UpdateCircleCommand implements Command {
         circle.setRadius(oldState.getRadius());
         circle.setOutlineColor(oldState.getOutlineColor());
         circle.setInnerColor(oldState.getInnerColor());
-        model.updateShape(circle);
+       
     }
     @Override
     public String executeLog() {
-        return "Updated: " + circle.getShapeName() + " [" + 
-               oldState + "] -> [" + 
-               newState + "]";
+        return "Updated: " + 
+               oldState.toString() + "->" + 
+               newState.toString();
     }
 }

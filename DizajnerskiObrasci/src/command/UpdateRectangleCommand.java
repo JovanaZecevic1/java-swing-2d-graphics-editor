@@ -10,14 +10,14 @@ public class UpdateRectangleCommand implements Command {
     private Rectangle rectangle;
     private Rectangle oldState;
     private Rectangle newState;
-    private ModelDrawing model;
+   
     
-    public UpdateRectangleCommand(ModelDrawing model, Rectangle rectangle, Rectangle newState) {
+    public UpdateRectangleCommand(Rectangle rectangle, Rectangle newState) {
         this.rectangle = rectangle;
         this.oldState = rectangle.clone();
         this.newState = newState;
         this.newState = newState;
-        this.model = model;
+        
         
     }
     
@@ -29,7 +29,7 @@ public class UpdateRectangleCommand implements Command {
         rectangle.setHeight(newState.getHeight());
         rectangle.setOutlineColor(newState.getOutlineColor());
         rectangle.setInnerColor(newState.getInnerColor());
-        model.updateShape(rectangle);
+        
     }
     
     @Override
@@ -40,12 +40,12 @@ public class UpdateRectangleCommand implements Command {
         rectangle.setHeight(oldState.getHeight());
         rectangle.setOutlineColor(oldState.getOutlineColor());
         rectangle.setInnerColor(oldState.getInnerColor());
-        model.updateShape(rectangle);
+       
     }
     @Override
     public String executeLog() {
-        return "Updated: " + rectangle.getShapeName() + " [" + 
-               oldState + "] -> [" + 
-               newState + "]";
+        return "Updated: " + 
+               oldState.toString() + " ->" + 
+               newState.toString();
     }
 }

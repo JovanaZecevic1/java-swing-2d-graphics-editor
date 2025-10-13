@@ -99,7 +99,7 @@ public class Point extends Shape {
 	
 	@Override //anotacija u Javi, nije obavezna, ali je dobra praksa navoditi je kada se vrsi redefinisanje
 	public String toString() {
-		return "(" + this.x + ", " + this.y + ")";
+		return "Point(" + x + "," + y + ","  + getOutlineColor().getRGB() + ")";
 	}
 	
 	@Override

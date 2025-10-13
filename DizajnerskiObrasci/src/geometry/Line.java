@@ -68,7 +68,7 @@ public class Line extends Shape{
 	@Override
 	public String toString() {
 		//return "("+this.startPoint.getX()+","+this.startPoint.getY()+")"+"--> ("+this.endPoint.getX()+","+this.endPoint.getY()+")";
-		return this.startPoint + "-->" + this.endPoint;
+		return "Line(" + startPoint.getX() + "," + startPoint.getY() + "," + endPoint.getX() + "," + endPoint.getY() + "," +  getOutlineColor().getRGB() + ")";
 	}
 	@Override
 	public boolean equals(Object obj) {

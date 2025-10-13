@@ -16,23 +16,17 @@ public class ToBackCommand implements Command{
     
     @Override
     public void execute() {
-        oldIndex = model.indexOf(shape);
-        if (oldIndex <= 0) return;
-
-        model.getAll().remove(shape);
-        newIndex = oldIndex - 1;
-        model.addAt(newIndex, shape);
+    	model.toBack(shape);
 
     }
     
     @Override
     public void unexecute() {
-    	 model.getAll().remove(shape);
-         model.addAt(oldIndex, shape);
+    	 model.toFront(shape);
     }
     @Override
     public String executeLog() {
-        return "To Back: " + shape.getClass().getSimpleName();
+        return "To Back: " + shape.toString();
     }
 
 }

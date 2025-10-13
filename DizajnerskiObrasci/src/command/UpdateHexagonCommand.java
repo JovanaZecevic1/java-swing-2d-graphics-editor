@@ -8,13 +8,13 @@ public class UpdateHexagonCommand implements Command{
 	 private HexagonAdapter hexagon;
 	    private HexagonAdapter oldState;
 	    private HexagonAdapter newState;
-	    private ModelDrawing model;
+	    
 
-	    public UpdateHexagonCommand(ModelDrawing model, HexagonAdapter hexagon, HexagonAdapter newState) {
+	    public UpdateHexagonCommand(HexagonAdapter hexagon, HexagonAdapter newState) {
 	        this.hexagon = hexagon;
 	        this.oldState = (HexagonAdapter) hexagon.clone();
 	        this.newState = newState;
-	        this.model = model;
+	       
 	    }
 
 	    @Override
@@ -23,7 +23,7 @@ public class UpdateHexagonCommand implements Command{
 	        hexagon.setR(newState.getR());
 	        hexagon.setOutlineColor(newState.getOutlineColor());
 	        hexagon.setInnerColor(newState.getInnerColor());
-	        model.updateShape(hexagon);
+	        
 	    }
 
 	    @Override
@@ -32,12 +32,12 @@ public class UpdateHexagonCommand implements Command{
 	        hexagon.setR(oldState.getR());
 	        hexagon.setOutlineColor(newState.getOutlineColor());
 	        hexagon.setInnerColor(newState.getInnerColor());
-	        model.updateShape(hexagon);
+	       
 	    }
 	    @Override
 	    public String executeLog() {
-	        return "Updated: " + hexagon.getShapeName() + " [" + 
-	               oldState + "] -> [" + 
-	               newState + "]";
+	        return "Updated: " + 
+	               oldState.toString() + "->" + 
+	               newState.toString();
 	    }
 }

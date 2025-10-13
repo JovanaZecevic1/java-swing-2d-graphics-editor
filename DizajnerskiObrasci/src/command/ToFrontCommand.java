@@ -33,7 +33,7 @@ public class ToFrontCommand implements Command {
     }
     @Override
     public String executeLog() {
-        return "To Front: " + shape.getClass().getSimpleName();
+        return "To Front: " + shape.toString();
     }
 
 }

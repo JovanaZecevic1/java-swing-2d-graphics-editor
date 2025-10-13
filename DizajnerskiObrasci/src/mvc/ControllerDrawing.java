@@ -1,18 +1,25 @@
 package mvc;
 
 import geometry.*;
+import strategy.*;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 import command.Command;
+import command.DeselectCommand;
 import command.AddShapeCommand;
 import command.BringToBackCommand;
 import command.BringToFrontCommand;
 import command.RemoveShapeCommand;
+import command.SelectCommand;
 import command.ToBackCommand;
 import command.ToFrontCommand;
 import command.UpdateCircleCommand;
@@ -29,6 +36,9 @@ public class ControllerDrawing {
 	//private ViewDrawing view;
 	private FrameDrawing frame;
 	private Point startPoint;
+	private SaveManager saveManager = new SaveManager();
+	private LoadManager<DefaultListModel<String>> loadLogManager = new LoadManager<>();
+	private LoadManager<List<Shape>> loadDrawingManager = new LoadManager<>();
 	
     private Stack<Command> undoStack = new Stack<>();
     private Stack<Command> redoStack = new Stack<>();
@@ -67,6 +77,8 @@ public class ControllerDrawing {
 	    }
 	    
 	}
+	
+	
 
 	public void redo() {
 	    if (canRedo()) {
@@ -210,7 +222,17 @@ public class ControllerDrawing {
 		}
 		if(frame.getTglbtnSelect().isSelected()) {
 			 boolean multiSelect = e.isControlDown();
-			model.selectShape(x,y, multiSelect);
+			    Shape clickedShape = model.getShapeAt(e.getX(), e.getY());
+
+			    if (clickedShape == null && !multiSelect) {
+			        // Klik na prazno — deselect everything
+			        for (Shape s : new ArrayList<>(model.getSelected())) {
+			            executeCommand(new DeselectCommand(model, s));
+			        }
+			    } else {
+			        executeCommand(new SelectCommand(model, e.getX(), e.getY(), multiSelect));
+			    }
+			    
 		}
 	}
 	
@@ -269,7 +291,8 @@ public class ControllerDrawing {
 	    	        );
 	    	        newState.setOutlineColor(dlg.getColor());
 	    	        //Command pattern
-	    	        executeCommand(new UpdatePointCommand(model, point, newState));
+	    	        executeCommand(new UpdatePointCommand(point, newState));
+	    	        frame.repaint();
 	    	        
 	    }
 	}
@@ -291,7 +314,8 @@ public class ControllerDrawing {
 	            );
 	            newState.setOutlineColor(dlg.getColor());
 	            
-	            executeCommand(new UpdateLineCommand(model, line, newState));
+	            executeCommand(new UpdateLineCommand(line, newState));
+	            frame.repaint();
 	           
 	    }
 	}
@@ -316,7 +340,8 @@ public class ControllerDrawing {
 	            newState.setOutlineColor(dlg.getOutlineColor());
 	            newState.setInnerColor(dlg.getInnerColor());
 	            
-	            executeCommand(new UpdateRectangleCommand(model, rectangle, newState));
+	            executeCommand(new UpdateRectangleCommand(rectangle, newState));
+	            frame.repaint();
 	           
 	    }
 	}
@@ -339,7 +364,8 @@ public class ControllerDrawing {
 	            newState.setOutlineColor(dlg.getOutlineColor());
 	            newState.setInnerColor(dlg.getInnerColor());
 	            
-	            executeCommand(new UpdateCircleCommand(model, circle, newState));
+	            executeCommand(new UpdateCircleCommand(circle, newState));
+	            frame.repaint();
 	           
 	    }
 	}
@@ -363,7 +389,8 @@ public class ControllerDrawing {
 	    	        newState.setOutlineColor(dlg.getOutlineColor());
 	    	        newState.setInnerColor(dlg.getInnerColor());
 	    	        
-	    	        executeCommand(new UpdateDonutCommand(model, donut, newState));
+	    	        executeCommand(new UpdateDonutCommand(donut, newState));
+	    	        frame.repaint();
 	    	      
 	    }
 	}
@@ -385,7 +412,8 @@ public class ControllerDrawing {
 	        newState.setOutlineColor(dlg.getOutlineColor());  
 	        newState.setInnerColor(dlg.getInnerColor());      
 	        
-	        executeCommand(new UpdateHexagonCommand(model, hexagon, newState));
+	        executeCommand(new UpdateHexagonCommand(hexagon, newState));
+	        frame.repaint();
 	    }
 	}
 	
@@ -416,6 +444,52 @@ public class ControllerDrawing {
 	        executeCommand(new BringToBackCommand(model, shape));
 	    }
 	}
+	
+	public void saveLog(String path) {
+	    try {
+	        saveManager.setStrategy(new SaveLogStrategy());
+	        List<String> log = new ArrayList<>();
+	        for (int i = 0; i < frame.getLogListModel().getSize(); i++) {
+	            log.add(frame.getLogListModel().getElementAt(i));
+	        }
+	        saveManager.save(log, path);
+	        JOptionPane.showMessageDialog(null, "Log saved successfully!");
+	    } catch (IOException e) {
+	        JOptionPane.showMessageDialog(null, "Error saving log: " + e.getMessage());
+	    }
+	}
+
+	// Snimi kompletan crtež (serialization)
+	public void saveDrawing(String path) {
+	    try {
+	        saveManager.setStrategy(new SaveDrawingStrategy());
+	        saveManager.save(model.getAll(), path);
+	        JOptionPane.showMessageDialog(null, "Drawing saved successfully!");
+	    } catch (IOException e) {
+	        JOptionPane.showMessageDialog(null, "Error saving drawing: " + e.getMessage());
+	    }
+	}
+	
+	public void loadLog(String path) {
+	    try {
+	        loadLogManager.setStrategy(new LoadLogStrategy());
+	        loadLogManager.load(frame.getLogListModel(), path);
+	        JOptionPane.showMessageDialog(null, "Log loaded successfully!");
+	    } catch (IOException e) {
+	        JOptionPane.showMessageDialog(null, "Error loading log: " + e.getMessage());
+	    }
+	}
+
+	public void loadDrawing(String path) {
+	    try {
+	        loadDrawingManager.setStrategy(new LoadDrawingStrategy());
+	        loadDrawingManager.load(model.getAll(), path);
+	        JOptionPane.showMessageDialog(null, "Drawing loaded successfully!");
+	    } catch (IOException e) {
+	        JOptionPane.showMessageDialog(null, "Error loading drawing: " + e.getMessage());
+	    }
+	}
+
 	
 	
 
