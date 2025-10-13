@@ -9,6 +9,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import observer.Observer;
@@ -67,11 +68,14 @@ public class FrameDrawing extends JFrame implements Observer{
     private JToggleButton tglbtnDonut;
     private JToggleButton tglbtnHexagon;
     private JPanel panel;
-    private DefaultListModel<String> logListModel;
-    private JList<String> logList;
+    private JTextArea logTextArea;
+    private JScrollPane logScrollPane;
+    //private DefaultListModel<String> logListModel;
+    //private JList<String> logList;
     
     //private Color edgeColor = Color.BLACK;
     //private Color fillColor = Color.WHITE;
+
 
 
 	/**
@@ -258,7 +262,7 @@ public class FrameDrawing extends JFrame implements Observer{
 				String[] options = {"Save Log", "Save Drawing"};
 		        int choice = JOptionPane.showOptionDialog(
 		                null,
-		                "Select what to save:",
+		                "What do you want to save?",
 		                "Save Options",
 		                JOptionPane.DEFAULT_OPTION,
 		                JOptionPane.QUESTION_MESSAGE,
@@ -267,19 +271,15 @@ public class FrameDrawing extends JFrame implements Observer{
 		                options[0]
 		        );
 
-		        if(choice == JOptionPane.CLOSED_OPTION) return;
-
-		        JFileChooser fileChooser = new JFileChooser();
-		        int result = fileChooser.showSaveDialog(null);
-		        if(result != JFileChooser.APPROVE_OPTION) return;
-
-		        String path = fileChooser.getSelectedFile().getAbsolutePath();
-
-		        if(choice == 0) {
-		            controller.saveLog(path);      // Prosledjujemo putanju
-		        } else if(choice == 1) {
-		            controller.saveDrawing(path);  // Prosledjujemo putanju
+		        if (choice == 0) {
+		            // Save Log
+		            controller.saveLog();
+		        } else if (choice == 1) {
+		            // Save Drawing
+		            controller.saveDrawing();
 		        }
+
+		      
 			}
 		});
 		panelWest.add(btnSave);
@@ -288,31 +288,29 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnOpen = new JButton("Open");
 		btnOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			        String[] options = {"Load Log", "Load Drawing"};
-			        int choice = JOptionPane.showOptionDialog(
-			                null,
-			                "Select what to load:",
-			                "Load Options",
-			                JOptionPane.DEFAULT_OPTION,
-			                JOptionPane.QUESTION_MESSAGE,
-			                null,
-			                options,
-			                options[0]
-			        );
+			    String[] options = {"Load Log", "Load Drawing"};
+		        int choice = JOptionPane.showOptionDialog(
+		                null,
+		                "What do you want to load?",
+		                "Load Options",
+		                JOptionPane.DEFAULT_OPTION,
+		                JOptionPane.QUESTION_MESSAGE,
+		                null,
+		                options,
+		                options[0]
+		        );
 
-			        if(choice == JOptionPane.CLOSED_OPTION) return;
-
-			        JFileChooser fileChooser = new JFileChooser();
-			        int result = fileChooser.showOpenDialog(null);
-			        if(result != JFileChooser.APPROVE_OPTION) return;
-
-			        String path = fileChooser.getSelectedFile().getAbsolutePath();
-
-			        if(choice == 0) {
-			            controller.loadLog(path);
-			        } else if(choice == 1) {
-			            controller.loadDrawing(path);
-			        }
+		      /* 
+		       u controlleru treba dodati sad ove metode
+		       if (choice == 0) {
+		            // Load Log
+		            controller.loadLog();
+		        } else if (choice == 1) {
+		            // Load Drawing
+		            controller.loadDrawing();
+		        } 
+		        
+		       */
 			}
 		});
 		panelWest.add(btnOpen);
@@ -341,11 +339,11 @@ public class FrameDrawing extends JFrame implements Observer{
 	    JLabel lblLog = new JLabel("Command Log:");
 	    panelEast.add(lblLog, BorderLayout.NORTH);
 	    
-	    logListModel = new DefaultListModel<>();
-	    logList = new JList<>(logListModel);
-	    JScrollPane scrollPane = new JScrollPane(logList);
-	    scrollPane.setPreferredSize(new Dimension(250, 0));
-	    panelEast.add(scrollPane, BorderLayout.CENTER);
+	    logTextArea = new JTextArea();
+	    logTextArea.setEditable(false);
+	    logScrollPane = new JScrollPane(logTextArea);
+	    logScrollPane.setPreferredSize(new Dimension(250, 0));
+	    panelEast.add(logScrollPane, BorderLayout.CENTER);
 		
 		
 	}
@@ -384,9 +382,9 @@ public class FrameDrawing extends JFrame implements Observer{
 		
 	}
 	
-	public DefaultListModel<String> getLogListModel() {
-	    return logListModel;
-	}
+	 public JScrollPane getLogScrollPane() {
+	        return logScrollPane;
+	    }
 	
 
 	public JToggleButton getTglbtnDraw() {

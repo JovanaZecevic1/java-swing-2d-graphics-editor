@@ -5,13 +5,17 @@ import strategy.*;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import command.Command;
 import command.DeselectCommand;
@@ -36,15 +40,16 @@ public class ControllerDrawing {
 	//private ViewDrawing view;
 	private FrameDrawing frame;
 	private Point startPoint;
-	private SaveManager saveManager = new SaveManager();
-	private LoadManager<DefaultListModel<String>> loadLogManager = new LoadManager<>();
-	private LoadManager<List<Shape>> loadDrawingManager = new LoadManager<>();
+
 	
     private Stack<Command> undoStack = new Stack<>();
     private Stack<Command> redoStack = new Stack<>();
     
     private Color activeEdgeColor = Color.BLACK;
     private Color activeFillColor = Color.WHITE;
+    private List<String> commandLog = new ArrayList<>();
+    
+    private SaveManager save = new SaveManager();
 	
 	public ControllerDrawing(ModelDrawing model, FrameDrawing frame) {
 		this.model = model;
@@ -64,7 +69,7 @@ public class ControllerDrawing {
 	    undoStack.push(cmd);              
 	    redoStack.clear();  
 	    cmd.execute(); 
-	    frame.getLogListModel().addElement(cmd.executeLog());
+	    logCommand(cmd.executeLog());
 	    
 	}
 
@@ -73,7 +78,7 @@ public class ControllerDrawing {
 	        Command cmd = undoStack.pop();             
 	        redoStack.push(cmd);
 	        cmd.unexecute(); 
-	        frame.getLogListModel().addElement("Undo: " + cmd.executeLog());
+	        logCommand(cmd.executeLog());
 	    }
 	    
 	}
@@ -85,7 +90,7 @@ public class ControllerDrawing {
 	        Command cmd = redoStack.pop();         
 	        undoStack.push(cmd);
 	        cmd.execute();  
-	        frame.getLogListModel().addElement("Redo: " + cmd.executeLog());
+	        logCommand(cmd.executeLog());
 	    }
 	    
 	}
@@ -445,53 +450,82 @@ public class ControllerDrawing {
 	    }
 	}
 	
-	public void saveLog(String path) {
+	private void logCommand(String cmd) {
+        JScrollPane logScrollPane = frame.getLogScrollPane();
+        JTextArea logTextArea = (JTextArea) logScrollPane.getViewport().getView();
+        logTextArea.append(cmd + "\n");
+        commandLog.add(cmd);
+    }
+	
+	public void saveLog() {
+	    JFileChooser chooser = new JFileChooser();
+	    chooser.setDialogTitle("Choose location to save your command log");
+	    chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt"));
+
+	    int result = chooser.showSaveDialog(frame);
+	    if (result != JFileChooser.APPROVE_OPTION) return;
+
+	    File selectedFile = chooser.getSelectedFile();
+	    if (!selectedFile.getName().toLowerCase().endsWith(".txt")) {
+	        selectedFile = new File(selectedFile.getAbsolutePath() + ".txt");
+	    }
+
 	    try {
-	        saveManager.setStrategy(new SaveLogStrategy());
-	        List<String> log = new ArrayList<>();
-	        for (int i = 0; i < frame.getLogListModel().getSize(); i++) {
-	            log.add(frame.getLogListModel().getElementAt(i));
-	        }
-	        saveManager.save(log, path);
-	        JOptionPane.showMessageDialog(null, "Log saved successfully!");
+	        // Strategy obrazac
+	        save.setStrategy(new SaveLogStrategy());
+	        save.save(commandLog, selectedFile.getAbsolutePath());
+
+	        JOptionPane.showMessageDialog(
+	            frame,
+	            "Command log has been successfully saved!\n\nLocation:\n" + selectedFile.getAbsolutePath(),
+	            "Log Saved",
+	            JOptionPane.INFORMATION_MESSAGE
+	        );
 	    } catch (IOException e) {
-	        JOptionPane.showMessageDialog(null, "Error saving log: " + e.getMessage());
+	        JOptionPane.showMessageDialog(
+	            frame,
+	            "Error while saving the log:\n" + e.getMessage(),
+	            "Saving Failed",
+	            JOptionPane.ERROR_MESSAGE
+	        );
 	    }
 	}
 
-	// Snimi kompletan crtež (serialization)
-	public void saveDrawing(String path) {
-	    try {
-	        saveManager.setStrategy(new SaveDrawingStrategy());
-	        saveManager.save(model.getAll(), path);
-	        JOptionPane.showMessageDialog(null, "Drawing saved successfully!");
-	    } catch (IOException e) {
-	        JOptionPane.showMessageDialog(null, "Error saving drawing: " + e.getMessage());
+	public void saveDrawing() {
+	    JFileChooser chooser = new JFileChooser();
+	    chooser.setDialogTitle("Save your current drawing");
+	    chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Serialized files (*.ser)", "ser"));
+
+	    int result = chooser.showSaveDialog(frame);
+	    if (result != JFileChooser.APPROVE_OPTION) return;
+
+	    File selectedFile = chooser.getSelectedFile();
+
+	    if (!selectedFile.getName().toLowerCase().endsWith(".ser")) {
+	        selectedFile = new File(selectedFile.getAbsolutePath() + ".ser");
 	    }
-	}
-	
-	public void loadLog(String path) {
+
 	    try {
-	        loadLogManager.setStrategy(new LoadLogStrategy());
-	        loadLogManager.load(frame.getLogListModel(), path);
-	        JOptionPane.showMessageDialog(null, "Log loaded successfully!");
+	        // Strategy obrazac
+	        save.setStrategy(new SaveDrawingStrategy());
+	        save.save(model.getAll(), selectedFile.getAbsolutePath());
+
+	        JOptionPane.showMessageDialog(
+	            frame,
+	            "Drawing has been successfully serialized and saved!\n\nLocation:\n" + selectedFile.getAbsolutePath(),
+	            "Drawing Saved",
+	            JOptionPane.INFORMATION_MESSAGE
+	        );
 	    } catch (IOException e) {
-	        JOptionPane.showMessageDialog(null, "Error loading log: " + e.getMessage());
+	        JOptionPane.showMessageDialog(
+	            frame,
+	            "Error while saving the drawing:\n" + e.getMessage(),
+	            "Saving Failed",
+	            JOptionPane.ERROR_MESSAGE
+	        );
 	    }
 	}
 
-	public void loadDrawing(String path) {
-	    try {
-	        loadDrawingManager.setStrategy(new LoadDrawingStrategy());
-	        loadDrawingManager.load(model.getAll(), path);
-	        JOptionPane.showMessageDialog(null, "Drawing loaded successfully!");
-	    } catch (IOException e) {
-	        JOptionPane.showMessageDialog(null, "Error loading drawing: " + e.getMessage());
-	    }
-	}
-
-	
-	
 
 	public void setActiveFillColor(Color color) {
 	    this.activeFillColor = color;

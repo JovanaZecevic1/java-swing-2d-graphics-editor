@@ -1,8 +1,8 @@
 package strategy;
 
+import java.io.File;
 import java.io.IOException;
 
-public interface LoadStrategy <T>{
-	 void load(T target, String path) throws IOException;
-
+public interface LoadStrategy {
+	 Object load(File file) throws Exception;
 }

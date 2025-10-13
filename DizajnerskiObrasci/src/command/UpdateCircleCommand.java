@@ -22,21 +22,14 @@ public class UpdateCircleCommand implements Command {
     
     @Override
     public void execute() {
-    	
-    	/*donut.setInnerRadius(newState.getInnerRadius());
-        donut.setOutlineColor(newState.getOutlineColor());
-        donut.setInnerColor(newState.getInnerColor());*/
         oldState.clone(circle);
         circle.clone(newState);
         
     }
     
     @Override
-    public void unexecute() {
-      /*donut.setInnerRadius(oldState.getInnerRadius());
-        donut.setOutlineColor(oldState.getOutlineColor());
-        donut.setInnerColor(oldState.getInnerColor());*/
-    	
+
+    public void unexecute() {    	
     	if (oldState != null) {
     		circle.clone(oldState);  
         }
