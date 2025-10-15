@@ -7,11 +7,13 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import javax.swing.DefaultListModel;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -50,10 +52,14 @@ public class ControllerDrawing {
     private List<String> commandLog = new ArrayList<>();
     
     private SaveManager save = new SaveManager();
+    private LoadManager load = new LoadManager();
+    
+    private CommandParser commandParser;
 	
 	public ControllerDrawing(ModelDrawing model, FrameDrawing frame) {
 		this.model = model;
 		this.frame=frame;
+		this.commandParser = new CommandParser(this);
 	}
 	
 	public boolean canUndo() {
@@ -64,12 +70,14 @@ public class ControllerDrawing {
 	    return !redoStack.isEmpty();
 	}
 
-	// Pomoćna metoda
-	private void executeCommand(Command cmd) {                                  
+	
+	public void executeCommand(Command cmd) {                                  
 	    undoStack.push(cmd);              
 	    redoStack.clear();  
 	    cmd.execute(); 
 	    logCommand(cmd.executeLog());
+	    frame.repaint();
+	    updateButtonStates(); 
 	    
 	}
 
@@ -78,7 +86,10 @@ public class ControllerDrawing {
 	        Command cmd = undoStack.pop();             
 	        redoStack.push(cmd);
 	        cmd.unexecute(); 
-	        logCommand(cmd.executeLog());
+	        logCommand("Undo: " + cmd.executeLog());
+	        frame.repaint();
+	        updateButtonStates(); 
+	        
 	    }
 	    
 	}
@@ -90,7 +101,9 @@ public class ControllerDrawing {
 	        Command cmd = redoStack.pop();         
 	        undoStack.push(cmd);
 	        cmd.execute();  
-	        logCommand(cmd.executeLog());
+	        logCommand("Redo: " + cmd.executeLog());
+	        frame.repaint();
+	        updateButtonStates(); 
 	    }
 	    
 	}
@@ -226,7 +239,7 @@ public class ControllerDrawing {
 
 		}
 		if(frame.getTglbtnSelect().isSelected()) {
-			 boolean multiSelect = e.isControlDown();
+			/* boolean multiSelect = e.isControlDown();
 			    Shape clickedShape = model.getShapeAt(e.getX(), e.getY());
 
 			    if (clickedShape == null && !multiSelect) {
@@ -237,22 +250,62 @@ public class ControllerDrawing {
 			    } else {
 			        executeCommand(new SelectCommand(model, e.getX(), e.getY(), multiSelect));
 			    }
-			    
+			    */
+			
+			boolean multiSelect = e.isControlDown();
+		    Shape clickedShape = model.getShapeAt(e.getX(), e.getY());
+
+		    if (clickedShape == null) {
+		        // Klik na prazno - deselektuj sve (samo ako nije multiSelect)
+		        if (!multiSelect) {
+		            for (Shape s : new ArrayList<>(model.getSelected())) {
+		                executeCommand(new DeselectCommand(model, s));
+		            }
+		        }
+		    } else {
+		        // Klik na shape - proveri da li je već selektovan
+		        if (clickedShape.isSelected()) {
+		            // Već je selektovan → DESELECT
+		            executeCommand(new DeselectCommand(model, clickedShape));
+		        } else {
+		            // Nije selektovan → SELECT
+		            if (!multiSelect) {
+		                // Prvo deselektuj sve ostale (ako nije multiSelect)
+		                for (Shape s : new ArrayList<>(model.getSelected())) {
+		                    executeCommand(new DeselectCommand(model, s));
+		                }
+		            }
+		            executeCommand(new SelectCommand(model, clickedShape));
+		        }
+		    }
+			
 		}
 	}
 	
 
 	
 	public void deleteSelected() {
-	    if (!model.hasSelected()) {
+		if (!model.hasSelected()) {
 	        JOptionPane.showMessageDialog(null, "There is no selected shape!", "Error", JOptionPane.ERROR_MESSAGE);
 	        return;
 	    }
 	    
-	    for (Shape shape : model.getSelected()) {
-	        int result = JOptionPane.showConfirmDialog(null, "Are you sure?", "Confirmation", JOptionPane.YES_NO_OPTION);
-	        if (result == JOptionPane.YES_OPTION) {
-	        	executeCommand(new RemoveShapeCommand(model, shape));
+	    List<Shape> selectedShapes = new ArrayList<>(model.getSelected());
+	    
+	    // Jedan dijalog za sve
+	    String message;
+	    if (selectedShapes.size() == 1) {
+	        message = "Are you sure you want to delete this shape?";
+	    } else {
+	        message = "Are you sure you want to delete " + selectedShapes.size() + " shapes?";
+	    }
+	    
+	    int result = JOptionPane.showConfirmDialog(null, message, "Confirmation", JOptionPane.YES_NO_OPTION);
+	    
+	    if (result == JOptionPane.YES_OPTION) {
+	        // Obriši sve selektovane shape-ove
+	        for (Shape shape : selectedShapes) {
+	            executeCommand(new RemoveShapeCommand(model, shape));
 	        }
 	    }
 	   
@@ -297,7 +350,8 @@ public class ControllerDrawing {
 	    	        newState.setOutlineColor(dlg.getColor());
 	    	        //Command pattern
 	    	        executeCommand(new UpdatePointCommand(point, newState));
-	    	        frame.repaint();
+	    	        
+	    	        
 	    	        
 	    }
 	}
@@ -320,7 +374,8 @@ public class ControllerDrawing {
 	            newState.setOutlineColor(dlg.getColor());
 	            
 	            executeCommand(new UpdateLineCommand(line, newState));
-	            frame.repaint();
+	            
+	           
 	           
 	    }
 	}
@@ -346,7 +401,8 @@ public class ControllerDrawing {
 	            newState.setInnerColor(dlg.getInnerColor());
 	            
 	            executeCommand(new UpdateRectangleCommand(rectangle, newState));
-	            frame.repaint();
+	           
+	           
 	           
 	    }
 	}
@@ -370,7 +426,8 @@ public class ControllerDrawing {
 	            newState.setInnerColor(dlg.getInnerColor());
 	            
 	            executeCommand(new UpdateCircleCommand(circle, newState));
-	            frame.repaint();
+	           
+	           
 	           
 	    }
 	}
@@ -395,7 +452,8 @@ public class ControllerDrawing {
 	    	        newState.setInnerColor(dlg.getInnerColor());
 	    	        
 	    	        executeCommand(new UpdateDonutCommand(donut, newState));
-	    	        frame.repaint();
+	    	       
+	    	       
 	    	      
 	    }
 	}
@@ -418,7 +476,8 @@ public class ControllerDrawing {
 	        newState.setInnerColor(dlg.getInnerColor());      
 	        
 	        executeCommand(new UpdateHexagonCommand(hexagon, newState));
-	        frame.repaint();
+	     
+	       
 	    }
 	}
 	
@@ -525,6 +584,143 @@ public class ControllerDrawing {
 	        );
 	    }
 	}
+	
+	
+	public void loadLogFile() {
+	    JFileChooser chooser = new JFileChooser();
+	    chooser.setDialogTitle("Select log file to load");
+	    chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt"));
+
+	    int result = chooser.showOpenDialog(frame);
+	    if (result != JFileChooser.APPROVE_OPTION) return;
+
+	    File selectedFile = chooser.getSelectedFile();
+
+	    try {
+	        // Učitaj sve komande iz fajla
+	        List<String> commands = Files.readAllLines(Paths.get(selectedFile.getAbsolutePath()));
+	        
+	        if (commands.isEmpty()) {
+	            JOptionPane.showMessageDialog(frame, "The log file is empty!", "Error", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+
+	        // Resetuj parser stack-ove
+	        commandParser.resetStacks();
+	        
+	        // Pitaj korisnika da li želi da očisti crtež
+	        int confirm = JOptionPane.showConfirmDialog(
+	            frame,
+	            "Do you want to clear the current drawing before loading the log?",
+	            "Clear Drawing",
+	            JOptionPane.YES_NO_OPTION
+	        );
+	        
+	        if (confirm == JOptionPane.YES_OPTION) {
+	            model.removeAll();
+	            frame.repaint();
+	        }
+
+	        // Otvori dijalog za replay
+	        DlgCommandReplay dialog = new DlgCommandReplay(frame, commands, commandParser, frame);
+	        dialog.setVisible(true);
+
+	    } catch (IOException e) {
+	        JOptionPane.showMessageDialog(
+	            frame,
+	            "Error reading log file:\n" + e.getMessage(),
+	            "Loading Failed",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void loadDrawing() {
+	    JFileChooser chooser = new JFileChooser();
+	    chooser.setDialogTitle("Select drawing file to load");
+	    chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Serialized files (*.ser)", "ser"));
+
+	    int result = chooser.showOpenDialog(frame);
+	    if (result != JFileChooser.APPROVE_OPTION) return;
+
+	    File selectedFile = chooser.getSelectedFile();
+
+	    try {
+	        // Učitaj crtež pomoću LoadManager-a
+	        load.setStrategy(new LoadDrawingStrategy());
+	        List<Shape> loadedShapes = (List<Shape>) load.load(selectedFile.getAbsolutePath());
+	        
+	        // Očisti trenutni model
+	        model.removeAll();
+	        
+	        // Dodaj učitane shape-ove
+	        for (Shape shape : loadedShapes) {
+	            model.add(shape);
+	        }
+	        
+	        frame.repaint();
+	        
+	        JOptionPane.showMessageDialog(
+	            frame,
+	            "Drawing loaded successfully!\n\nShapes loaded: " + loadedShapes.size(),
+	            "Drawing Loaded",
+	            JOptionPane.INFORMATION_MESSAGE
+	        );
+	        
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(
+	            frame,
+	            "Error loading drawing:\n" + e.getMessage(),
+	            "Loading Failed",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void switchToDrawMode() {
+		if (model.hasSelected()) {
+	        List<Shape> currentlySelected = new ArrayList<>(model.getSelected());
+	        
+	        // Deselektuj svaki shape kroz komandu da bi se logovao
+	        for (Shape shape : currentlySelected) {
+	            executeCommand(new DeselectCommand(model, shape));
+	        }
+		} updateButtonStates();
+	}
+	
+	private void updateButtonStates() {
+	    
+	    
+	        // Provera selekcije
+	        List<Shape> selectedShapes = model.getSelected();
+	        boolean hasSelection = selectedShapes.size() > 0;
+	        boolean singleSelection = selectedShapes.size() == 1;
+	        
+	        Shape selected = singleSelection ? selectedShapes.get(0) : null;
+	        int index = selected != null ? model.indexOf(selected) : -1;
+	        int totalShapes = model.getSize();
+	        
+	        
+	        frame.setDeleteEnabled(hasSelection);
+	        frame.setModifyEnabled(singleSelection);
+	        
+	        // Z-ordering 
+	        frame.setToFrontEnabled(singleSelection && index < totalShapes - 1);
+	        frame.setToBackEnabled(singleSelection && index > 0);
+	        frame.setBringToFrontEnabled(singleSelection && index < totalShapes - 1);
+	        frame.setBringToBackEnabled(singleSelection && index > 0);
+	        
+	        // Undo/Redo
+	        frame.getBtnUndo().setEnabled(canUndo());
+		    frame.getBtnRedo().setEnabled(canRedo());
+	        
+	        // Save/Open 
+	        frame.setSaveEnabled(totalShapes > 0);
+	        frame.setOpenEnabled(true);
+	    
+	}
 
 
 	public void setActiveFillColor(Color color) {
@@ -544,6 +740,14 @@ public class ControllerDrawing {
 		 this.activeEdgeColor = color;
 		    frame.getBtnEdgeColor().setBackground(color);
 		
+	}
+
+	public ModelDrawing getModel() {
+		return model;
+	}
+
+	public FrameDrawing getFrame() {
+		return frame;
 	}
 	
 

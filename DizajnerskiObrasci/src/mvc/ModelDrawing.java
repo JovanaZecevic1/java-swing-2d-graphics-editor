@@ -40,12 +40,10 @@ public class ModelDrawing implements Observable{
 		notifyObservers();
 	}
 	
-	public void updateShape(Shape shape) {
-	    // samo obaveštava
+	public void shapeUpdated(Shape s) {
 	    notifyObservers();
 	}
 
-	
 	public List<Shape> getAll(){
 		return shapes;
 	}
@@ -64,7 +62,9 @@ public class ModelDrawing implements Observable{
 	public int indexOf(Shape shape) {
 		return shapes.indexOf(shape);
 	}
-	
+	public List<Shape> getShapesReference() {
+	    return shapes; // Vrati originalnu listu, ne kopiju
+	}
 	//selekcija
 	
 	public void selectShape(int x, int y,  boolean multiSelect) {
@@ -85,6 +85,7 @@ public class ModelDrawing implements Observable{
 		if (clickedShape == null) {
 			if (!multiSelect) {
 	            clearSelection();
+	           notifyObservers();
 	        }
 	        return;
 		}
@@ -124,6 +125,14 @@ public class ModelDrawing implements Observable{
 	    selectShape(x, y, false);
 	}
 	
+	public void removeAll() {
+	    shapes.clear();
+	    selectedShapes.clear();
+	    notifyObservers();
+	}
+
+	
+	
 	public List<Shape> getSelected(){
 		return new ArrayList<>(selectedShapes);
 	}
@@ -147,6 +156,7 @@ public class ModelDrawing implements Observable{
 	public void removeFromSelection(Shape shape) {
 		selectedShapes.remove(shape);
 		shape.setSelected(false);
+		notifyObservers();
 	}
 	
 	public void toFront(Shape shape) {
@@ -182,6 +192,14 @@ public class ModelDrawing implements Observable{
         }
         notifyObservers();
 	}
+    
+    public void addToSelection(Shape shape) {
+        if (!selectedShapes.contains(shape)) {
+            selectedShapes.add(shape);
+            shape.setSelected(true);
+            notifyObservers();
+        }
+    }
 	
 
 	@Override

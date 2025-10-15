@@ -89,6 +89,13 @@ public class HexagonAdapter extends Shape{
     public void setR(int r) {
         hexagon.setR(r);
     }
+    public void setX(int x) {
+        hexagon.setX(x);
+    }
+
+    public void setY(int y) {
+        hexagon.setY(y);
+    }
 
     @Override
     public String toString() {
@@ -120,15 +127,20 @@ public class HexagonAdapter extends Shape{
 	    	return this.hexagon.getR();
 	    }
 
-    @Override
-    public HexagonAdapter clone(Shape newHexagon) {
-    	 HexagonAdapter hexagon = (HexagonAdapter) newHexagon;
-         this.setCenter(hexagon.getCenter());
-         this.setRadius(hexagon.getRadius());
-         this.setOutlineColor(hexagon.getOutlineColor());
-         this.setInnerColor(hexagon.getInnerColor());
-         return this;
-    }
+	    @Override
+	    public HexagonAdapter clone() {
+	        HexagonAdapter hex = new HexagonAdapter(
+	            this.getX(),
+	            this.getY(),
+	            this.getR()
+	        );
+	        
+	        hex.setOutlineColor(this.getOutlineColor());
+	        hex.setInnerColor(this.getInnerColor());
+	        
+	        return hex;
+	    }
+
     
     @Override
     public String getShapeName() {

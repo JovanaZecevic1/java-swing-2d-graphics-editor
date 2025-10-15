@@ -1,44 +1,35 @@
 package command;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import geometry.Shape;
 import mvc.ModelDrawing;
 
-public class SelectCommand implements Command{
-	private ModelDrawing model;
-    private int x;
-    private int y;
-    private boolean multiSelect;
-
+public class SelectCommand implements Command {
     
-    private List<Shape> previousSelectedShapes;
-   
+    private ModelDrawing model;
+    private Shape shape;
 
-    public SelectCommand(ModelDrawing model, int x, int y, boolean multiSelect) {
+    // Konstruktor prima Shape direktno
+    public SelectCommand(ModelDrawing model, Shape shape) {
         this.model = model;
-        this.x = x;
-        this.y = y;
-        this.multiSelect = multiSelect;
-        
-        
-        this.previousSelectedShapes = new ArrayList<>(model.getSelected());
+        this.shape = shape;
     }
+
     @Override
     public void execute() {
-    	 model.selectShape(x, y, multiSelect);
+        if (shape != null && !shape.isSelected()) {
+            model.addToSelection(shape);
+        }
     }
 
     @Override
     public void unexecute() {
-    	 model.clearSelection();
-    	 
+        if (shape != null && shape.isSelected()) {
+            model.removeFromSelection(shape);
+        }
     }
 
     @Override
     public String executeLog() {
-        return "Selected: " + model.getShapeAt(x,y).toString();   
-     }
-
+        return "Selected: " + shape.toString();
+    }
 }

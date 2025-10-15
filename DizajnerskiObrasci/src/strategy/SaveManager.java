@@ -10,8 +10,10 @@ public class SaveManager {
     }
 
     public void save(Object data, String path) throws IOException {
-        if (strategy != null)
-            strategy.save(data, path);
+        if (strategy == null) {
+            throw new IllegalStateException("Save strategy not set");
+        }
+        strategy.save(data, path);
     }
 
 }

@@ -100,17 +100,20 @@ public class Circle extends Shape{
 		return 0;
 
 	}
+	
 	@Override
-	public Circle clone( Shape newCircle) {
-		if (newCircle == null) {
-			return null;
-		}
-		Circle circle = (Circle) newCircle;
-		this.getCenter().setX(circle.getCenter().getX());
-		this.getCenter().setY(circle.getCenter().getY());
-		this.setRadius(circle.getRadius());
-		this.setOutlineColor(circle.getOutlineColor());
-		this.setInnerColor(circle.getInnerColor());
-		return this;
+	public Circle clone() {
+	    Circle circle = new Circle();
+	    
+	    circle.setCenter(new Point());
+	    circle.getCenter().setX(this.getCenter().getX());
+	    circle.getCenter().setY(this.getCenter().getY());
+	    circle.setRadius(this.getRadius());
+	    circle.setOutlineColor(this.getOutlineColor());
+	    circle.setInnerColor(this.getInnerColor());
+	    
+	    return circle;
 	}
+
+	
 }

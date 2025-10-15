@@ -145,14 +145,19 @@ public class Point extends Shape {
 		return 0;
 
 	}
+	
 	@Override
-	public Point clone(Shape newPoint) {
-		Point point = (Point) newPoint;
-		this.setX(point.getX());
-		this.setY(point.getY());
-		this.setOutlineColor(point.getOutlineColor());
-		return this;
+	public Point clone() {
+	    Point point = new Point();
+	    point.setX(this.getX());
+	    point.setY(this.getY());
+	    point.setOutlineColor(this.getOutlineColor());
+	    return point;
 	}
+
+
+	
+	
 
 
 }

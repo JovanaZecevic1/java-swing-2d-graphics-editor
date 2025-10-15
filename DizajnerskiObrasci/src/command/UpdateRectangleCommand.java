@@ -14,29 +14,27 @@ public class UpdateRectangleCommand implements Command {
     
     public UpdateRectangleCommand(Rectangle rectangle, Rectangle newState) {
         this.rectangle = rectangle;
-        this.oldState = new Rectangle();
+        this.oldState = rectangle.clone();
         this.newState = newState; 
     }
     
     @Override
     public void execute() {
-       /* rectangle.setHeight(newState.getHeight());
+    	rectangle.setUpperLeftPoint(newState.getUpperLeftPoint());
+        rectangle.setWidth(newState.getWidth());
+        rectangle.setHeight(newState.getHeight());
         rectangle.setOutlineColor(newState.getOutlineColor());
-        rectangle.setInnerColor(newState.getInnerColor());*/
-        oldState.clone(rectangle);
-        rectangle.clone(newState);
+        rectangle.setInnerColor(newState.getInnerColor());
         
     }
     
     @Override
     public void unexecute() {
-    	/*rectangle.setHeight(oldState.getHeight());
+    	rectangle.setUpperLeftPoint(oldState.getUpperLeftPoint());
+        rectangle.setWidth(oldState.getWidth());
+        rectangle.setHeight(oldState.getHeight());
         rectangle.setOutlineColor(oldState.getOutlineColor());
-        rectangle.setInnerColor(oldState.getInnerColor());*/
-    	if(oldState != null) {
-    		rectangle.clone(oldState);
-        }
-        return;
+        rectangle.setInnerColor(oldState.getInnerColor());
        
     }
     @Override

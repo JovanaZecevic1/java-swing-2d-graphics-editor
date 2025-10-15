@@ -33,7 +33,7 @@ import java.awt.event.ActionEvent;
 
 
 
-public class FrameDrawing extends JFrame implements Observer{
+public class FrameDrawing extends JFrame {
 	
 	private JPanel panelCenter;
     private JPanel panelEast;
@@ -87,7 +87,7 @@ public class FrameDrawing extends JFrame implements Observer{
 	    this.view = new ViewDrawing();
 	    this.controller = new ControllerDrawing(model, this);
 	    this.view.setModel(model);
-		model.addObserver(this);
+		
 		
 		Dimension btnSize = new Dimension(120, 40);
 		Dimension shapeBtnSize = new Dimension(100,30);
@@ -145,7 +145,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		tglbtnDraw.setMaximumSize(btnSize);
 		tglbtnDraw.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 model.clearSelection();
+				 controller.switchToDrawMode(); 
 			}
 		});
 		
@@ -181,6 +181,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnUndo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.undo();
+				
 			}
 		});
 		panelWest.add(btnUndo);
@@ -190,6 +191,7 @@ public class FrameDrawing extends JFrame implements Observer{
 		btnRedo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.redo();
+				
 			}
 		});
 		panelWest.add(btnRedo);
@@ -300,17 +302,13 @@ public class FrameDrawing extends JFrame implements Observer{
 		                options[0]
 		        );
 
-		      /* 
-		       u controlleru treba dodati sad ove metode
-		       if (choice == 0) {
+		        if (choice == 0) {
 		            // Load Log
-		            controller.loadLog();
+		            controller.loadLogFile();
 		        } else if (choice == 1) {
 		            // Load Drawing
 		            controller.loadDrawing();
-		        } 
-		        
-		       */
+		        }
 			}
 		});
 		panelWest.add(btnOpen);
@@ -349,38 +347,7 @@ public class FrameDrawing extends JFrame implements Observer{
 	}
 	
 
-	@Override
-	public void update() {
-		   // Provera da li postoje selektovani oblici
-	    boolean hasSelection = model.hasSelected();
-	    int selectedCount = model.getSelectedCount();
-	    int totalShapes = model.getSize();
-	    
-	    // Dugmad koja zavise od selekcije
-	    btnModify.setEnabled(selectedCount == 1);
-	    btnDelete.setEnabled(hasSelection);
-	    
-	    // Dugmad za pomeranje po Z-osi (potrebna je tačno 1 selekcija)
-	    boolean hasSingleSelection = (selectedCount == 1);
-	    btnToFront.setEnabled(hasSingleSelection);
-	    btnToBack.setEnabled(hasSingleSelection);
-	    btnBringToFront.setEnabled(hasSingleSelection);
-	    btnBringToBack.setEnabled(hasSingleSelection);
-	    
-	    // Dugmad za boje (potrebna je bar 1 selekcija)
-	    btnEdgeColor.setEnabled(true);
-	    btnFillColor.setEnabled(true);
-	    
-	    btnUndo.setEnabled(controller.canUndo());
-	    btnRedo.setEnabled(controller.canRedo());;
-	    
-	    // Save dugme - omogući samo ako postoje oblici
-	    btnSave.setEnabled(totalShapes > 0);
-	    
-	    // Open dugme - uvek omogućeno
-	    btnOpen.setEnabled(true);
-		
-	}
+	
 	
 	 public JScrollPane getLogScrollPane() {
 	        return logScrollPane;
@@ -481,6 +448,48 @@ public class FrameDrawing extends JFrame implements Observer{
 
 	public void setController(ControllerDrawing controller) {
 		this.controller = controller;
+	}
+	
+	
+
+	public void setUndoEnabled(boolean enabled) {
+	    btnUndo.setEnabled(enabled);
+	}
+
+	public void setRedoEnabled(boolean enabled) {
+	    btnRedo.setEnabled(enabled);
+	}
+
+	public void setModifyEnabled(boolean enabled) {
+	    btnModify.setEnabled(enabled);
+	}
+
+	public void setDeleteEnabled(boolean enabled) {
+	    btnDelete.setEnabled(enabled);
+	}
+
+	public void setToFrontEnabled(boolean enabled) {
+	    btnToFront.setEnabled(enabled);
+	}
+
+	public void setToBackEnabled(boolean enabled) {
+	    btnToBack.setEnabled(enabled);
+	}
+
+	public void setBringToFrontEnabled(boolean enabled) {
+	    btnBringToFront.setEnabled(enabled);
+	}
+
+	public void setBringToBackEnabled(boolean enabled) {
+	    btnBringToBack.setEnabled(enabled);
+	}
+
+	public void setSaveEnabled(boolean enabled) {
+	    btnSave.setEnabled(enabled);
+	}
+
+	public void setOpenEnabled(boolean enabled) {
+	    btnOpen.setEnabled(enabled);
 	}
 	
 

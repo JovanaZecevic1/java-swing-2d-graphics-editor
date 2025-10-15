@@ -1,20 +1,41 @@
 package strategy;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.List;
 
 import geometry.Shape;
-public class LoadDrawingStrategy implements LoadStrategy<List<Shape>> {
+public class LoadDrawingStrategy implements LoadStrategy{
 	
-	public void load(List<Shape> target, String path) throws IOException {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
-            List<Shape> loadedShapes = (List<Shape>) ois.readObject();
-            target.clear();
-            target.addAll(loadedShapes);
-        } catch (ClassNotFoundException e) {
-            throw new IOException("Error loading shapes: " + e.getMessage());
-        }
-    }
+	 @Override
+	    public Object load(String path) throws IOException {
+	        if (path == null) {
+	            throw new IllegalArgumentException("Path cannot be null");
+	        }
+	        
+	        File inputFile = new File(path);
+	        ObjectInputStream objectStream = null;
+	        
+	        try {
+	            FileInputStream fileStream = new FileInputStream(inputFile);
+	            objectStream = new ObjectInputStream(fileStream);
+	            Object data = objectStream.readObject();
+	            return data;
+	            
+	        } catch (ClassNotFoundException ex) {
+	            throw new IOException("Invalid drawing file format: " + ex.getMessage());
+	        } catch (IOException ex) {
+	            throw new IOException("Failed to load drawing file: " + ex.getMessage());
+	        } finally {
+	            if (objectStream != null) {
+	                try {
+	                    objectStream.close();
+	                } catch (IOException e) {
+	                    
+	                }
+	            }
+	        }
+	    }
 
 }

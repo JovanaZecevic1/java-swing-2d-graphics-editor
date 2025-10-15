@@ -5,39 +5,32 @@ import mvc.ModelDrawing;
 
 public class UpdateHexagonCommand implements Command{
 
-	 private HexagonAdapter hexagon;
+	    private HexagonAdapter hexagon;
 	    private HexagonAdapter oldState;
 	    private HexagonAdapter newState;
 	    
 
 	    public UpdateHexagonCommand(HexagonAdapter hexagon, HexagonAdapter newState) {
 	        this.hexagon = hexagon;
-	        this.oldState = new HexagonAdapter(0, 0, 0);
+	        this.oldState = hexagon.clone(); 
 	        this.newState = newState;
 	       
 	    }
 
 	    @Override
 	    public void execute() {
-	       /* hexagon.moveTo(newState.getX(), newState.getY());
-	        hexagon.setR(newState.getR());
+	    	hexagon.setCenter(newState.getCenter());
+	        hexagon.setRadius(newState.getRadius());
 	        hexagon.setOutlineColor(newState.getOutlineColor());
 	        hexagon.setInnerColor(newState.getInnerColor());
-	        */
-	    	oldState.clone(hexagon);
-		    hexagon.clone(newState);
 	    }
 
 	    @Override
 	    public void unexecute() {
-	   /*point.setX(oldState.getX());
-        point.setY(oldState.getY());
-        point.setOutlineColor(oldState.getOutlineColor());*/
-	    	if (oldState != null) {
-	    		hexagon.clone(oldState);  
-	        }
-	    	return;
-	        
+	    	hexagon.setCenter(oldState.getCenter());
+	        hexagon.setRadius(oldState.getRadius());
+	        hexagon.setOutlineColor(oldState.getOutlineColor());
+	        hexagon.setInnerColor(oldState.getInnerColor());
 	       
 	    }
 	    @Override

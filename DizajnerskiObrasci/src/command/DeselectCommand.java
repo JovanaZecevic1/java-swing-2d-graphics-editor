@@ -4,31 +4,38 @@ import geometry.Shape;
 import mvc.ModelDrawing;
 
 public class DeselectCommand implements Command {
-	 private ModelDrawing model;
-	    private Shape shape;
-	    private boolean wasSelected;
-	    
-	    public DeselectCommand(ModelDrawing model, Shape shape) {
-	        this.model = model;
-	        this.shape = shape;
-	        this.wasSelected = shape.isSelected();
-	    }
+    
+    private ModelDrawing model;
+    private Shape shape;
+    private boolean wasInSelection;
+    
+    public DeselectCommand(ModelDrawing model, Shape shape) {
+        this.model = model;
+        this.shape = shape;
+    }
 
-	    @Override
-	    public void execute() {
-	        model.deselectShape(shape);
-	    }
+    @Override
+    public void execute() {
+        if (shape != null) {
+            wasInSelection = model.getSelected().contains(shape);
+            if (shape.isSelected()) {
+                shape.setSelected(false);
+                model.removeFromSelection(shape);
+            }
+        }
+    }
 
-	    @Override
-	    public void unexecute() {
-	        if (wasSelected) {
-	            shape.setSelected(true);
-	        }
-	    }
+    @Override
+    public void unexecute() {
+        if (shape != null && wasInSelection) {
+        	  if (shape != null && wasInSelection) {
+                  model.addToSelection(shape); 
+              }
+        }
+    }
 
-	    @Override
-	    public String executeLog() {
-	        return "Deselected " + shape.toString();
-	    }
-
+    @Override
+    public String executeLog() {
+        return "Deselected: " + shape.toString();
+    }
 }

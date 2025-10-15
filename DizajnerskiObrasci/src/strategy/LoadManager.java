@@ -2,17 +2,18 @@ package strategy;
 
 import java.io.IOException;
 
-public class LoadManager <T> {
+public class LoadManager {
 
-	private LoadStrategy<T> strategy;
+	 private LoadStrategy strategy;
 
-    public void setStrategy(LoadStrategy<T> strategy) {
-        this.strategy = strategy;
-    }
+	    public void setStrategy(LoadStrategy strategy) {
+	        this.strategy = strategy;
+	    }
 
-    public void load(T target, String path) throws IOException {
-        if (strategy != null) {
-            strategy.load(target, path);
-        }
-    }
+	    public Object load(String path) throws IOException {
+	        if (strategy == null) {
+	            throw new IllegalStateException("Load strategy not set");
+	        }
+	        return strategy.load(path);
+	    }
 }
