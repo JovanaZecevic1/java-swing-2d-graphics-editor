@@ -77,7 +77,7 @@ public class ControllerDrawing {
 	    cmd.execute(); 
 	    logCommand(cmd.executeLog());
 	    frame.repaint();
-	    updateButtonStates(); 
+	   updateButtonStates(); 
 	    
 	}
 
@@ -88,7 +88,7 @@ public class ControllerDrawing {
 	        cmd.unexecute(); 
 	        logCommand("Undo: " + cmd.executeLog());
 	        frame.repaint();
-	        updateButtonStates(); 
+	       updateButtonStates(); 
 	        
 	    }
 	    
@@ -687,13 +687,17 @@ public class ControllerDrawing {
 	        for (Shape shape : currentlySelected) {
 	            executeCommand(new DeselectCommand(model, shape));
 	        }
-		} updateButtonStates();
+		} //updateButtonStates();
 	}
 	
 	private void updateButtonStates() {
+		
+        // Undo/Redo
+        frame.getBtnUndo().setEnabled(canUndo());
+	    frame.getBtnRedo().setEnabled(canRedo());
 	    
 	    
-	        // Provera selekcije
+	      /*  // Provera selekcije
 	        List<Shape> selectedShapes = model.getSelected();
 	        boolean hasSelection = selectedShapes.size() > 0;
 	        boolean singleSelection = selectedShapes.size() == 1;
@@ -712,15 +716,14 @@ public class ControllerDrawing {
 	        frame.setBringToFrontEnabled(singleSelection && index < totalShapes - 1);
 	        frame.setBringToBackEnabled(singleSelection && index > 0);
 	        
-	        // Undo/Redo
-	        frame.getBtnUndo().setEnabled(canUndo());
-		    frame.getBtnRedo().setEnabled(canRedo());
+
 	        
 	        // Save/Open 
 	        frame.setSaveEnabled(totalShapes > 0);
 	        frame.setOpenEnabled(true);
+	        */
 	    
-	}
+	} 
 
 
 	public void setActiveFillColor(Color color) {
